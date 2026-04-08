@@ -1,125 +1,140 @@
 @import "tailwindcss";
 
-/**
- * CSS Variables for Dynamic Theming
- * These are set by ThemeProvider based on store configuration
- */
-:root {
-  /* Colors - Default values (overridden by ThemeProvider) */
-  --color-primary: #3b82f6;
-  --color-primary-hover: #2563eb;
-  --color-secondary: #8b5cf6;
-  --color-secondary-hover: #7c3aed;
-  --color-accent: #f59e0b;
-  --color-background: #ffffff;
-  --color-foreground: #0f172a;
-  --color-muted: #f1f5f9;
-  --color-muted-foreground: #64748b;
-  --color-border: #e2e8f0;
-  --color-input: #e2e8f0;
-  --color-ring: #3b82f6;
-  --color-success: #10b981;
-  --color-warning: #f59e0b;
-  --color-error: #ef4444;
-  --color-info: #3b82f6;
+/* ============================================================
+   Honey Bee — Stitch "Luminous Alchemist" Design System
+   Material Design 3 colour palette + editorial luxury tokens
+   ============================================================ */
 
-  /* Typography */
-  --font-family-sans: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-family-serif: Georgia, Cambria, "Times New Roman", Times, serif;
-  --font-family-mono: Menlo, Monaco, Consolas, "Courier New", monospace;
+@theme {
+  /* ── Surfaces ── */
+  --color-background:                #fcf9f4;
+  --color-surface:                   #fcf9f4;
+  --color-surface-bright:            #fcf9f4;
+  --color-surface-dim:               #dcdad5;
+  --color-surface-variant:           #e5e2dd;
+  --color-surface-container-lowest:  #ffffff;
+  --color-surface-container-low:     #f6f3ee;
+  --color-surface-container:         #f0ede8;
+  --color-surface-container-high:    #ebe8e3;
+  --color-surface-container-highest: #e5e2dd;
 
-  /* Border Radius */
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
+  /* ── Primary — Deep Honey Amber ── */
+  --color-primary:                   #7b5800;
+  --color-primary-container:         #d59f2b;
+  --color-primary-fixed:             #ffdea6;
+  --color-primary-fixed-dim:         #f7bd48;
+  --color-on-primary:                #ffffff;
+  --color-on-primary-container:      #513900;
+  --color-on-primary-fixed:          #271900;
+  --color-on-primary-fixed-variant:  #5d4200;
+  --color-inverse-primary:           #f7bd48;
+  --color-surface-tint:              #7b5800;
+
+  /* ── Secondary — Botanical Green ── */
+  --color-secondary:                 #5c614d;
+  --color-secondary-container:       #e0e5cc;
+  --color-secondary-fixed:           #e0e5cc;
+  --color-secondary-fixed-dim:       #c4c9b1;
+  --color-on-secondary:              #ffffff;
+  --color-on-secondary-container:    #626753;
+  --color-on-secondary-fixed:        #191d0e;
+  --color-on-secondary-fixed-variant:#444937;
+
+  /* ── Tertiary — Warm Terracotta ── */
+  --color-tertiary:                  #944925;
+  --color-tertiary-container:        #ee9066;
+  --color-tertiary-fixed:            #ffdbcd;
+  --color-tertiary-fixed-dim:        #ffb596;
+  --color-on-tertiary:               #ffffff;
+  --color-on-tertiary-container:     #6a2906;
+  --color-on-tertiary-fixed:         #360f00;
+  --color-on-tertiary-fixed-variant: #76320f;
+
+  /* ── Text / On-Colors ── */
+  --color-on-background:             #1c1c19;
+  --color-on-surface:                #1c1c19;
+  --color-on-surface-variant:        #4f4634;
+  --color-inverse-on-surface:        #f3f0eb;
+  --color-inverse-surface:           #31302d;
+
+  /* ── Structure ── */
+  --color-outline:                   #817662;
+  --color-outline-variant:           #d3c5ae;
+
+  /* ── Error / Feedback ── */
+  --color-error:                     #ba1a1a;
+  --color-error-container:           #ffdad6;
+  --color-on-error:                  #ffffff;
+  --color-on-error-container:        #93000a;
+
+  /* ── Legacy aliases for ThemeProvider compatibility ── */
+  --color-foreground:                #1c1c19;
+  --color-muted:                     #f0ede8;
+  --color-muted-foreground:          #4f4634;
+  --color-border:                    #d3c5ae;
+  --color-input:                     #f6f3ee;
+  --color-ring:                      #7b5800;
+
+  /* ── Border Radius (artisan pebble scale) ── */
+  --radius:      0.25rem;
+  --radius-lg:   0.5rem;
+  --radius-xl:   1.5rem;
   --radius-full: 9999px;
 
-  /* Spacing */
-  --spacing-xs: 0.5rem;
-  --spacing-sm: 1rem;
-  --spacing-md: 1.5rem;
-  --spacing-lg: 2rem;
-  --spacing-xl: 3rem;
-
-  /* Legacy variables for compatibility */
-  --background: var(--color-background);
-  --foreground: var(--color-foreground);
+  /* ── Typography ── */
+  --font-headline: "Noto Serif", Georgia, serif;
+  --font-body:     "Manrope", system-ui, sans-serif;
+  --font-label:    "Manrope", system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-/* Dark mode support */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0a0a0a;
-    --color-foreground: #ededed;
-    --color-muted: #1e1e1e;
-    --color-muted-foreground: #a1a1aa;
-    --color-border: #27272a;
-    --color-input: #27272a;
-    
-    /* Legacy */
-    --background: var(--color-background);
-    --foreground: var(--color-foreground);
-  }
-}
-
+/* ── Body defaults ── */
 body {
-  background: var(--color-background);
-  color: var(--color-foreground);
-  font-family: var(--font-family-sans);
+  background-color: #fcf9f4;
+  color: #1c1c19;
+  font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Utility classes for theme colors */
-.bg-primary {
-  background-color: var(--color-primary);
-}
+/* ============================================================
+   Honey Bee Utility Classes
+   ============================================================ */
 
-.bg-primary-hover:hover {
-  background-color: var(--color-primary-hover);
-}
+@layer utilities {
+  /* Primary CTA gradient — deep honey amber */
+  .honey-glow {
+    background: linear-gradient(135deg, #7b5800 0%, #d59f2b 100%);
+  }
 
-.text-primary {
-  color: var(--color-primary);
-}
+  /* Sticky nav frosted glass effect */
+  .botanical-glass {
+    background: rgba(252, 249, 244, 0.85);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
 
-.border-primary {
-  border-color: var(--color-primary);
-}
+  /* Floating card / elevated element shadow — NEVER use shadow-lg */
+  .sunlight-shadow {
+    box-shadow: 0 12px 40px rgba(28, 28, 25, 0.05);
+  }
 
-.bg-secondary {
-  background-color: var(--color-secondary);
-}
+  /* Hero full-bleed image overlay — fades to page canvas */
+  .hero-overlay {
+    background: linear-gradient(
+      to right,
+      rgba(252, 249, 244, 0.9)  0%,
+      rgba(252, 249, 244, 0.4) 50%,
+      transparent              100%
+    );
+  }
 
-.text-secondary {
-  color: var(--color-secondary);
-}
-
-.bg-accent {
-  background-color: var(--color-accent);
-}
-
-.text-accent {
-  color: var(--color-accent);
-}
-
-.bg-muted {
-  background-color: var(--color-muted);
-}
-
-.text-muted-foreground {
-  color: var(--color-muted-foreground);
-}
-
-.border-border {
-  border-color: var(--color-border);
+  /* Section title eyebrow / pill label / nav link pattern */
+  .label-caps {
+    font-family: var(--font-label);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
 }
 
