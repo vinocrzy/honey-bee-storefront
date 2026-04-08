@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Honey Bee - Our Story</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#7b5800",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1c1c19",
+                    "secondary-fixed": "#e0e5cc",
+                    "secondary-fixed-dim": "#c4c9b1",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fcf9f4",
+                    "on-tertiary-container": "#6a2906",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#191d0e",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "on-secondary-fixed-variant": "#444937",
+                    "inverse-on-surface": "#f3f0eb",
+                    "surface-bright": "#fcf9f4",
+                    "background": "#fcf9f4",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#f0ede8",
+                    "on-surface": "#1c1c19",
+                    "inverse-primary": "#f7bd48",
+                    "surface-container-low": "#f6f3ee",
+                    "surface-variant": "#e5e2dd",
+                    "surface-dim": "#dcdad5",
+                    "outline": "#817662",
+                    "on-primary-container": "#513900",
+                    "secondary": "#5c614d",
+                    "on-tertiary-fixed-variant": "#76320f",
+                    "tertiary": "#944925",
+                    "primary-container": "#d59f2b",
+                    "primary-fixed-dim": "#f7bd48",
+                    "outline-variant": "#d3c5ae",
+                    "primary": "#7b5800",
+                    "surface-container-high": "#ebe8e3",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#626753",
+                    "surface-container-highest": "#e5e2dd",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#271900",
+                    "on-primary-fixed-variant": "#5d4200",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#ffdea6",
+                    "inverse-surface": "#31302d",
+                    "secondary-container": "#e0e5cc",
+                    "tertiary-fixed": "#ffdbcd",
+                    "on-surface-variant": "#4f4634",
+                    "tertiary-container": "#ee9066",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+      }
+      .honey-glow {
+        background: linear-gradient(135deg, #7b5800 0%, #d59f2b 100%);
+      }
+      .serif-display { font-family: 'Noto Serif', serif; }
+      .sans-label { font-family: 'Manrope', sans-serif; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-[#fcf9f4]/80 dark:bg-[#1c1c19]/80 backdrop-blur-md sticky top-0 z-50 flex justify-between items-center w-full px-8 lg:px-20 py-6 max-w-[1920px] mx-auto">
+<div class="text-2xl font-serif text-[#7b5800] dark:text-[#d59f2b] tracking-tight">Honey Bee</div>
+<div class="hidden md:flex items-center space-x-8 lg:space-x-12">
+<a class="text-[#4f4634] dark:text-[#d3c5ae] sans-label text-xs lg:text-sm uppercase tracking-widest hover:text-[#7b5800] transition-colors duration-300 whitespace-nowrap" href="#">Shop Soaps</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] sans-label text-xs lg:text-sm uppercase tracking-widest hover:text-[#7b5800] transition-colors duration-300 whitespace-nowrap" href="#">Collections</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] sans-label text-xs lg:text-sm uppercase tracking-widest hover:text-[#7b5800] transition-colors duration-300 whitespace-nowrap" href="#">Oils</a>
+<a class="text-[#7b5800] border-b border-[#7b5800] pb-1 sans-label text-xs lg:text-sm uppercase tracking-widest whitespace-nowrap" href="#">Our Story</a>
+</div>
+<div class="flex items-center space-x-4 lg:space-x-6">
+<button class="text-[#7b5800] hover:scale-95 duration-200 transition-transform">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="text-[#7b5800] hover:scale-95 duration-200 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+</div>
+</nav>
+<main>
+<!-- Hero Section: Founder's Journey -->
+<section class="relative px-8 lg:px-20 pt-12 pb-24 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+<div class="z-10 order-2 md:order-1">
+<span class="sans-label text-xs uppercase tracking-[0.3em] text-primary font-bold mb-6 block">From Clinical to Craft</span>
+<h1 class="serif-display text-4xl lg:text-7xl text-on-background leading-tight mb-8">The Founder's Journey</h1>
+<p class="text-lg text-on-surface-variant leading-relaxed mb-10 max-w-xl">
+                    For fifteen years, Sarah worked the night shift as a critical care nurse. In the sterile, high-stakes environment of the ICU, she found solace in the science of healing—but her own skin, ravaged by clinical detergents and stress, cried out for a gentler kind of care.
+                </p>
+<div class="flex items-center gap-6">
+<button class="honey-glow px-8 py-4 rounded-xl text-on-primary sans-label font-bold tracking-wider uppercase text-sm shadow-xl shadow-primary/10 hover:opacity-90 transition-opacity">
+                        Read Full Memoir
+                    </button>
+</div>
+</div>
+<div class="relative order-1 md:order-2">
+<div class="aspect-[4/5] rounded-xl overflow-hidden shadow-2xl">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a woman with warm skin in a sun-drenched studio surrounded by dried herbs and wooden bowls, soft morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAz3aZtHDae9s5zgYHPW1lsTS3AlaRZ0TBTz5SQXJi1NAWoP0b6ffo23TYIxw1ufzqgDOvZKKZ4v-zcS9g1hYJX3uH7qtcs1dZy1atxKDQ9NpnLdqbPkrn8iwe-5DUTDWBKMx_zO9ibDnvJs2S0Me6RmQk9ZrDc1z8QtB9RzOBlOY_PzVTk0fWo7VADdz7E8yonRhiXdoW3hQglPqh1n7nsNxIylGKWQY-ntg-vUI40xbU2Pto6Z4tk-_3SK8cGC_uJLTNAfh26JUmN"/>
+</div>
+<div class="absolute -bottom-6 -left-6 md:-bottom-10 md:-left-10 w-40 h-40 md:w-48 md:h-48 bg-secondary-container rounded-full flex items-center justify-center p-6 md:p-8 text-center -z-10 md:z-20 shadow-lg">
+<p class="serif-display italic text-on-secondary-container text-xs md:text-sm">"Healing starts with what we touch."</p>
+</div>
+</div>
+</section>
+<!-- Our Process: Cold-Process Details -->
+<section class="bg-surface-container py-24 lg:py-32 px-8 lg:px-20">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 lg:mb-20 gap-8">
+<div class="max-w-2xl">
+<h2 class="serif-display text-4xl lg:text-5xl text-on-surface mb-6">Our Process</h2>
+<p class="text-on-surface-variant text-lg leading-relaxed">
+                            We don't rush nature. Our cold-process method preserves the integrity of our botanical ingredients, requiring six weeks of patient curing to reach peak quality.
+                        </p>
+</div>
+<span class="sans-label text-sm text-outline tracking-widest uppercase pb-2">Slow-made with intention</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<div class="space-y-6">
+<div class="aspect-square bg-surface-container-lowest rounded-xl p-2">
+<img class="w-full h-full object-cover rounded-lg" data-alt="Artisan hands pouring thick golden honey into a large stone mixing bowl with swirling botanical oils, warm tones" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmXU9aTDzdfA6JgdED1f-fxytLVQoinr57m1x_vGXJ9p6kamJMUEVB4MaON05uZhl4f2Lf3W_7unD8hBY38-ZvuqyGeht9IPzpCbOC97NOK9r6mZyxmfECkewV427JYgueWOMeirCTzz9gymp79CNcsogN-4OpLYMM_gb2VfQiycqPOF6IQgoAClFe_fbRPF7IczjXCPDRd58h1uyyG-HVvOGCvvse8ooDAPF3pNQlKJh2L0rfyc5UhumOuEG4S9Ivf3td3sV1ofql"/>
+</div>
+<h3 class="serif-display text-2xl text-primary">The Infusion</h3>
+<p class="text-on-surface-variant leading-relaxed">Botanical oils are steeped with organic herbs for 48 hours before the soap-making begins.</p>
+</div>
+<div class="space-y-6 lg:mt-24">
+<div class="aspect-square bg-surface-container-lowest rounded-xl p-2">
+<img class="w-full h-full object-cover rounded-lg" data-alt="Close up of soap batter being swirled in a wooden mold showing marble-like textures of cream and honey colors" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAXGbeu5BljdURVUNMc2sgjaHQM6mA2bGs595eMDynUj69BBKlMGtLCrMANxrwf-Vn_haWYcdJ1iioHldO5M3s96auaYWdd1KHf5jKYuLOjkpYPJ2MwbPZ8YZS2CaZ4aA1Yi-GRgin9SY7Awkh7D2OzXP8hd3Pkrez9_SqcdoIobiQ5zNglmpSg5N-fms8bbkSa-cUWSJd1Ht-DiixHZ0Mu_prdZabvediHpZKaV7ebvBBRYEOssTwVFOT9dQMxXyYbetQ_AV2HXOWY"/>
+</div>
+<h3 class="serif-display text-2xl text-primary">Cold Saponification</h3>
+<p class="text-on-surface-variant leading-relaxed">By avoiding external heat, we ensure the delicate vitamins in our wild honey remain active.</p>
+</div>
+<div class="space-y-6 md:col-span-2 lg:col-span-1 md:max-w-md lg:max-w-none mx-auto lg:mx-0">
+<div class="aspect-square bg-surface-container-lowest rounded-xl p-2">
+<img class="w-full h-full object-cover rounded-lg" data-alt="Row of cured soap bars on an old wooden shelf with soft backlighting through a dusty window" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6Q6fYRbDZSrG6Un24yuaDDFVmJ-e-Xw8Yb4UnmOCTYavD9c2xRIpytz-y9IzM4Xp4QonI9LwaO9_xEeVRWa2rhE9MF0XeO3F_mk4CB6UcUuuifanErXkqcE4aCowz5dJeM3PO9LHpRAaO1RvD2h2tumOjckQLeROixqlPyWVsCnQDWGYylMOmnDXSoSsRw03e-89CzUj4AlSiXmkcul-xqaacO9frmGV59baa_wWF1Ogr8idepIhJ4dUIBeArhZwH4jnFOxzFlqMo"/>
+</div>
+<h3 class="serif-display text-2xl text-primary">The Six-Week Cure</h3>
+<p class="text-on-surface-variant leading-relaxed">Each bar matures in our temperature-controlled atelier to ensure a hard, long-lasting, luxurious lather.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Sourcing: Wild Honey & Botanical Oils -->
+<section class="py-24 lg:py-32 px-8 lg:px-20 grid grid-cols-1 md:grid-cols-2 gap-16 lg:gap-20 items-center">
+<div class="relative order-2 md:order-1">
+<div class="rounded-xl overflow-hidden aspect-[16/10] shadow-xl">
+<img class="w-full h-full object-cover" data-alt="Sustainable apiary in a wild flower meadow during late afternoon with golden sun rays highlighting bee hives and flora" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCof84tyc1IQRwc391WknDrIzu_rVbeqiQZX13dGv0q85okEZRi4-DlejkVv3dN1udviAMb7zUgjwO_XOcZL2gUjPvILPtsq80kTG0siUCzuzbH-Wk5OKEpXByyb-OExys0xxjrJKpVZ_3oOUT3fjOSqW5DKNLckOBpWAV5g5-jkBc_t1QrmjaDqlGCAZWZaj1wp_RkoVJDa87aZ6NdqTyt0lmIzikoHn4SPnzObhrM297CikRExcFNUw94XGctHVG1DtIhH9j6cEaX"/>
+</div>
+<div class="mt-8 grid grid-cols-2 gap-6 lg:gap-8">
+<div class="rounded-xl overflow-hidden aspect-square">
+<img class="w-full h-full object-cover" data-alt="Macro photo of thick yellow oil dripping from a glass pipette into a pool of golden liquid, sharp focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDWi659k5c_S4DHU5PFhRV4yA7JKbubFod-4Tr3gSS3gKDHiR2jPzRYLqit-WyaAgFMhkRSQbddkk8scfJVFC16pZH6lL9_kKJEACwyX2lsVVmUZ3aT25T3mhs7FgDE2Sew2s-YeWxph8UFajB0kvAya0S-vz1yaww9KaJdqMqe0g0nYEHBYAtqPnfQd83ytNAMpJvN11pX3NKdKMTEatr_g2alk6iGep8KUPywBQ3BjlVzJAn72_BBCLCPSgU0ni1L3afXLgk2tOcx"/>
+</div>
+<div class="rounded-xl overflow-hidden aspect-square">
+<img class="w-full h-full object-cover" data-alt="Close-up of raw organic honeycomb dripping with fresh honey on a dark wooden background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCTGyucrQY2E_WsP5EHy4acMQU17yoEJEkZAL5juEklEJdpINPdkhIVFuo0VMzaqFFNklhq2ZGSDV1K3O9zACQ7xi9URM7drDYvTZt5-DV6F6MsP3sics_goJgAyFeldcTE_SlRSKiRxUnCHlPS6A74hiPqNZGqChy7sp4d-FGsOCFXX7yKc6AM2D7VKtKceNo1TR20vOchHZPRE272upa3ThDdyPBjVSQhUBMnyrbRoYxG9WlFdqHl6UQz6Fvawm4_eEX_arayj-5t"/>
+</div>
+</div>
+</div>
+<div class="order-1 md:order-2">
+<h2 class="serif-display text-4xl lg:text-5xl text-on-surface mb-10">Radical Sourcing</h2>
+<div class="space-y-10 lg:space-y-12">
+<div class="flex gap-6">
+<div class="w-12 h-12 flex-shrink-0 bg-primary-container/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">hive</span>
+</div>
+<div>
+<h4 class="serif-display text-xl mb-2">Wild Meadow Honey</h4>
+<p class="text-on-surface-variant leading-relaxed">Sourced from a singular family-owned apiary in the Blue Ridge Mountains, our honey is raw, unfiltered, and harvested with the health of the hive as the first priority.</p>
+</div>
+</div>
+<div class="flex gap-6">
+<div class="w-12 h-12 flex-shrink-0 bg-primary-container/20 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">eco</span>
+</div>
+<div>
+<h4 class="serif-display text-xl mb-2">Botanical Alchemy</h4>
+<p class="text-on-surface-variant leading-relaxed">We use only cold-pressed jojoba, sweet almond, and castor oils—never palm oil. Each ingredient is selected for its specific fatty acid profile to mimic the skin's natural barrier.</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- The Nurse's Promise -->
+<section class="bg-primary text-on-primary py-24 lg:py-32 px-8 lg:px-20 relative overflow-hidden">
+<!-- Decorative circle -->
+<div class="absolute -top-24 -right-24 w-72 h-72 lg:w-96 lg:h-96 bg-primary-container/20 rounded-full blur-3xl"></div>
+<div class="max-w-4xl mx-auto text-center relative z-10">
+<span class="material-symbols-outlined text-5xl mb-8" style="font-variation-settings: 'FILL' 1;">health_and_safety</span>
+<h2 class="serif-display text-4xl lg:text-6xl mb-10">The Nurse's Promise</h2>
+<div class="h-px w-24 bg-primary-container mx-auto mb-10"></div>
+<p class="text-lg lg:text-2xl font-light italic leading-relaxed mb-12">
+                    "My transition from clinical nursing to soap-making wasn't a career change—it was a focus change. I still believe in the science of the body, in pH balance, and in microbial safety. Every bar we make is dermatologically tested, small-batch produced, and formulated with medical-grade precision—wrapped in the luxury of the earth."
+                </p>
+<div class="flex flex-col items-center">
+<p class="sans-label font-bold tracking-widest uppercase text-sm">Sarah Henderson, RN</p>
+<p class="text-xs opacity-70">Founder of Honey Bee Atelier</p>
+</div>
+</div>
+</section>
+<!-- Product Teaser / CTA -->
+<section class="py-24 lg:py-32 px-8 lg:px-20 text-center">
+<h2 class="serif-display text-3xl lg:text-4xl text-on-surface mb-12">Experience the Alchemy</h2>
+<div class="max-w-md mx-auto bg-surface-container-low rounded-xl p-8 flex items-center justify-between shadow-sm">
+<div class="text-left">
+<p class="sans-label text-[10px] lg:text-xs text-primary font-bold uppercase tracking-widest mb-1">Our Signature Bar</p>
+<h4 class="serif-display text-xl lg:text-2xl text-on-surface">Wild Honey &amp; Oat</h4>
+</div>
+<a class="w-12 h-12 lg:w-14 lg:h-14 bg-primary rounded-full flex items-center justify-center text-on-primary hover:scale-110 transition-transform" href="#">
+<span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#f0ede8] dark:bg-[#2a2a26] mt-10 lg:mt-20 flex flex-col md:flex-row justify-between items-start w-full px-8 lg:px-20 py-16 space-y-12 md:space-y-0">
+<div class="max-w-sm">
+<div class="text-xl font-serif text-[#7b5800] mb-4">Honey Bee</div>
+<p class="text-[#4f4634] dark:text-[#d3c5ae] font-body text-sm leading-relaxed mb-6">
+                Artisanal soaps crafted with the precision of a nurse and the heart of a healer.
+            </p>
+<div class="text-[#4f4634] dark:text-[#d3c5ae] text-xs">
+                © 2024 Honey Bee Atelier. Handcrafted with intention.
+            </div>
+</div>
+<div class="grid grid-cols-2 gap-12 lg:gap-16">
+<div class="flex flex-col space-y-4">
+<h5 class="sans-label text-[10px] lg:text-xs uppercase font-bold tracking-widest text-[#7b5800]">Support</h5>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] text-sm hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="#">Shipping</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] text-sm hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="#">Returns</a>
+</div>
+<div class="flex flex-col space-y-4">
+<h5 class="sans-label text-[10px] lg:text-xs uppercase font-bold tracking-widest text-[#7b5800]">Ethos</h5>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] text-sm hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="#">Sustainability</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] text-sm hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+</div>
+</div>
+</footer>
+</body></html>

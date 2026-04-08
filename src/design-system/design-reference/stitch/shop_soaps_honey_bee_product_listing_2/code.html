@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shop All | Honey Bee Atelier</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#7b5800",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1c1c19",
+                    "secondary-fixed": "#e0e5cc",
+                    "secondary-fixed-dim": "#c4c9b1",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fcf9f4",
+                    "on-tertiary-container": "#6a2906",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#191d0e",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "on-secondary-fixed-variant": "#444937",
+                    "inverse-on-surface": "#f3f0eb",
+                    "surface-bright": "#fcf9f4",
+                    "background": "#fcf9f4",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#f0ede8",
+                    "on-surface": "#1c1c19",
+                    "inverse-primary": "#f7bd48",
+                    "surface-container-low": "#f6f3ee",
+                    "surface-variant": "#e5e2dd",
+                    "surface-dim": "#dcdad5",
+                    "outline": "#817662",
+                    "on-primary-container": "#513900",
+                    "secondary": "#5c614d",
+                    "on-tertiary-fixed-variant": "#76320f",
+                    "tertiary": "#944925",
+                    "primary-container": "#d59f2b",
+                    "primary-fixed-dim": "#f7bd48",
+                    "outline-variant": "#d3c5ae",
+                    "primary": "#7b5800",
+                    "surface-container-high": "#ebe8e3",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#626753",
+                    "surface-container-highest": "#e5e2dd",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#271900",
+                    "on-primary-fixed-variant": "#5d4200",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#ffdea6",
+                    "inverse-surface": "#31302d",
+                    "secondary-container": "#e0e5cc",
+                    "tertiary-fixed": "#ffdbcd",
+                    "on-surface-variant": "#4f4634",
+                    "tertiary-container": "#ee9066",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .honey-glow {
+            background: linear-gradient(135deg, #7b5800 0%, #d59f2b 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body selection:bg-primary-container/30">
+<!-- Top Navigation Shell -->
+<header class="bg-[#fcf9f4]/80 dark:bg-[#1c1c19]/80 backdrop-blur-md sticky top-0 z-50 transition-all duration-300">
+<nav class="flex justify-between items-center w-full px-6 md:px-12 lg:px-20 py-6 max-w-[1920px] mx-auto">
+<!-- Brand Logo -->
+<a class="text-2xl font-headline font-serif text-[#7b5800] dark:text-[#d59f2b] tracking-tight" href="#">Honey Bee</a>
+<!-- Navigation Links (Tablet/Desktop) -->
+<div class="hidden md:flex items-center space-x-6 lg:space-x-10">
+<a class="text-[#7b5800] border-b border-[#7b5800] pb-1 font-label text-[12px] lg:text-[13px] uppercase tracking-widest transition-colors duration-300" href="#">Shop Soaps</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] font-label text-[12px] lg:text-[13px] uppercase tracking-widest hover:text-[#7b5800] transition-colors duration-300" href="#">Collections</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] font-label text-[12px] lg:text-[13px] uppercase tracking-widest hover:text-[#7b5800] transition-colors duration-300" href="#">Oils</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] font-label text-[12px] lg:text-[13px] uppercase tracking-widest hover:text-[#7b5800] transition-colors duration-300" href="#">Our Story</a>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center space-x-6">
+<button class="scale-95 duration-200 transition-transform text-[#7b5800] flex items-center">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="scale-95 duration-200 transition-transform text-[#7b5800] flex items-center relative">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="absolute -top-2 -right-2 bg-primary text-on-primary text-[10px] font-bold px-1.5 py-0.5 rounded-full">2</span>
+</button>
+<button class="md:hidden text-[#7b5800]">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+</header>
+<main class="max-w-[1920px] mx-auto px-6 md:px-12 lg:px-20 py-12">
+<!-- Header & Breadcrumbs -->
+<section class="mb-12 md:mb-16">
+<div class="flex flex-col space-y-4">
+<nav class="flex text-[11px] uppercase tracking-[0.2em] text-on-surface-variant/60 font-label">
+<a class="hover:text-primary" href="#">Home</a>
+<span class="mx-2">/</span>
+<span class="text-primary font-bold">Shop All</span>
+</nav>
+<h1 class="text-5xl md:text-6xl lg:text-7xl font-headline font-bold text-primary tracking-tighter leading-tight">
+                    The Soap <br/><span class="italic font-normal">Gallery</span>
+</h1>
+</div>
+</section>
+<div class="flex flex-col lg:flex-row gap-12 lg:gap-16">
+<!-- Sidebar: Filters & Promise - Adjusted for Tablet (Horizontal on tablet, vertical on desktop) -->
+<aside class="w-full lg:w-72 flex-shrink-0 space-y-10 md:space-y-0 lg:space-y-12 md:grid md:grid-cols-2 lg:block md:gap-x-12 md:gap-y-10">
+<!-- Category Filters -->
+<div class="space-y-6">
+<h3 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface">Categories</h3>
+<div class="flex flex-col space-y-4">
+<label class="flex items-center group cursor-pointer">
+<div class="w-5 h-5 rounded-full border border-outline-variant group-hover:border-primary flex items-center justify-center transition-all">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-100"></div>
+</div>
+<span class="ml-3 font-label text-sm text-primary font-bold">Soaps</span>
+</label>
+<label class="flex items-center group cursor-pointer">
+<div class="w-5 h-5 rounded-full border border-outline-variant group-hover:border-primary flex items-center justify-center transition-all">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-0 group-hover:opacity-20"></div>
+</div>
+<span class="ml-3 font-label text-sm text-on-surface-variant">Oils</span>
+</label>
+<label class="flex items-center group cursor-pointer">
+<div class="w-5 h-5 rounded-full border border-outline-variant group-hover:border-primary flex items-center justify-center transition-all">
+<div class="w-2.5 h-2.5 rounded-full bg-primary opacity-0 group-hover:opacity-20"></div>
+</div>
+<span class="ml-3 font-label text-sm text-on-surface-variant">Body Butter</span>
+</label>
+</div>
+</div>
+<!-- Skin Type Filters -->
+<div class="space-y-6">
+<h3 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface">Skin Type</h3>
+<div class="flex flex-wrap gap-2">
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-xs font-label hover:bg-secondary-container transition-colors">Sensitive</button>
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-xs font-label hover:bg-secondary-container transition-colors">Dry</button>
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-xs font-label hover:bg-secondary-container transition-colors">Oily</button>
+<button class="px-4 py-2 rounded-full bg-surface-container text-on-surface-variant text-xs font-label hover:bg-secondary-container transition-colors">Normal</button>
+</div>
+</div>
+<!-- Fragrance Profile -->
+<div class="space-y-6">
+<h3 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface">Fragrance</h3>
+<div class="space-y-3">
+<div class="flex justify-between items-center text-sm font-label text-on-surface-variant">
+<span>Floral</span>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-secondary-container">12</span>
+</div>
+<div class="flex justify-between items-center text-sm font-label text-on-surface-variant">
+<span>Earthy</span>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-secondary-container">8</span>
+</div>
+<div class="flex justify-between items-center text-sm font-label text-on-surface-variant">
+<span>Citrus</span>
+<span class="text-[10px] px-2 py-0.5 rounded-full bg-secondary-container">5</span>
+</div>
+</div>
+</div>
+<!-- The Honey Bee Promise -->
+<div class="bg-secondary-container/40 p-8 rounded-xl space-y-4 md:col-span-2 lg:col-span-1">
+<span class="material-symbols-outlined text-primary scale-125">nature_people</span>
+<h4 class="font-headline font-bold text-primary text-xl leading-snug">The Honey Bee Promise</h4>
+<p class="text-sm text-on-surface-variant leading-relaxed font-body">
+                        Each bar is cured for six weeks in our atelier, ensuring a longer-lasting, deeply moisturizing lather that respects your skin’s delicate biome.
+                    </p>
+<ul class="space-y-2 text-xs font-label text-on-surface-variant font-medium">
+<li class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-2 text-primary">check</span> Cold-Pressed Process</li>
+<li class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-2 text-primary">check</span> Organic Botanicals</li>
+<li class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-2 text-primary">check</span> Cruelty-Free</li>
+</ul>
+</div>
+</aside>
+<!-- Product Grid -->
+<div class="flex-1 mt-12 lg:mt-0">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-16">
+<!-- Product Card 1 -->
+<div class="group flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden mb-6 relative">
+<img alt="Artisan soap bar" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="close-up of a handmade manuka honey soap bar with visible lavender petals on top, soft golden lighting, organic texture" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA6nNpF5HDgqS-bvlwyzREimlI4BdsnAZnf4vzAeWPCzvhXHQknQjWO9mbuHYDB5aBUcSbHhpze9GsSoOX6tUeF8GOccqogqBdQF5mAfNQrZ39oPGDVcFI_q52kL3lcKzeHjGOlDJnHEsH3bIIuw9ObgxC9TIPW9xUS4F2lLcy5qmMOyG99JNaxFXLduWXocr1pDulSw1Li12xYjbwZDaJ3IGAi1zVY77_uSvlv_69GEmYFVsAGMeV7_PdJifRyzq7rOBmYiMUYENuV"/>
+<div class="absolute top-4 left-4">
+<span class="bg-primary text-on-primary text-[10px] font-label uppercase tracking-widest px-3 py-1 rounded-full">Best Seller</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-2xl font-headline font-bold text-on-surface">Manuka &amp; Wild Lavender</h3>
+<span class="text-xl font-label text-primary font-medium">$18</span>
+</div>
+<p class="text-sm font-label uppercase tracking-widest text-secondary font-semibold">Fragrance: Botanical &amp; Sweet</p>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+                                Deeply hydrating Manuka honey paired with calming lavender fields. Perfect for nighttime rituals and sensitive skin recovery.
+                            </p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Soothing</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Repairing</span>
+</div>
+<button class="honey-glow w-full mt-4 py-4 rounded-xl text-on-primary font-label text-xs uppercase tracking-widest font-bold md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform md:translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 shadow-lg">
+                                Add to Ritual
+                            </button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden mb-6 relative">
+<img alt="Eucalyptus soap" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="minimalist overhead shot of two green soap bars with eucalyptus leaves on a white stone surface, bright natural daylight" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCr1wnbYEFggyVyJ9vxbP-5yf_IaR6tWiv2QBecDLX5YtK9AbLWXrc7hQzrt50dDgbGUztD_kz4hL2Qq41k3xfQ7wQdT5VmTZVcSS_Ky2AaC9Pf44wVRrhGXNu4NDk5NT0RFPls7dgrARGRCLEJsjWuowq9yCAlw8ODm6fvMXRtqKiopi-461pWHr7hs01t5L80PqjwG8FDv_l1wNVH7_kpFiq1nejq8kh4K1i5KRx-MqFfdGpqDtPfb2dWDxgHWQk4Y4kzOg1rgKQ-"/>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-2xl font-headline font-bold text-on-surface">Eucalyptus &amp; Pine Needle</h3>
+<span class="text-xl font-label text-primary font-medium">$16</span>
+</div>
+<p class="text-sm font-label uppercase tracking-widest text-secondary font-semibold">Fragrance: Fresh &amp; Resinous</p>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+                                An invigorating morning blend designed to clear the mind and stimulate circulation with crisp forest extracts.
+                            </p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Refreshing</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Detox</span>
+</div>
+<button class="honey-glow w-full mt-4 py-4 rounded-xl text-on-primary font-label text-xs uppercase tracking-widest font-bold md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform md:translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 shadow-lg">
+                                Add to Ritual
+                            </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden mb-6 relative">
+<img alt="Rose soap" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="artisan soap bar with dried rose petals, soft pink and cream tones, diffused ethereal lighting, editorial aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJO2eFq9Mm9zdSqrCQXlHUujTQZJEFSW-1kh9VD0CzISilbtBxIrl1ubBjdUi8e75juYJcjI6AYMEtl8d9WIPyWd2Lc20L5arT1TbQZS4dKIhmGAd_wn1oWXojR0h6IxEG0pnJURs3RpqiHsJbh22jOsO9R5aa_rSWBPQrlDUGo4ZvQAnDBZNwpI2XgT6dAmkwXfccG0A9-XJw_VxYABSKbJYUqfEmz20674JTPQ8fxSr40E7SAbWd4NjjBr_ynHTIivFiBf1oPZu1"/>
+<div class="absolute top-4 left-4">
+<span class="bg-secondary text-on-secondary text-[10px] font-label uppercase tracking-widest px-3 py-1 rounded-full">Limited Edition</span>
+</div>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-2xl font-headline font-bold text-on-surface">Velvet Rose &amp; Clay</h3>
+<span class="text-xl font-label text-primary font-medium">$22</span>
+</div>
+<p class="text-sm font-label uppercase tracking-widest text-secondary font-semibold">Fragrance: Opulent Floral</p>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+                                Pink Himalayan clay draws out impurities while distilled Damask rose oil provides a decadent, silky finish.
+                            </p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Purifying</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Radiance</span>
+</div>
+<button class="honey-glow w-full mt-4 py-4 rounded-xl text-on-primary font-label text-xs uppercase tracking-widest font-bold md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform md:translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 shadow-lg">
+                                Add to Ritual
+                            </button>
+</div>
+</div>
+<!-- Product Card 4 -->
+<div class="group flex flex-col">
+<div class="aspect-[4/5] bg-surface-container-low rounded-xl overflow-hidden mb-6 relative">
+<img alt="Charcoal soap" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="dark textured charcoal soap bar on a black slate background with water droplets, dramatic high contrast lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD7y68Rsn16XIBph3V8_FPvV4jJDB03BaXVEF6zFJPkwUW3pLmuCpU_nn7M5ZRFxOwily60CapW0uQfWC1DgZM-e83OzV4tT1nSyr8DE8hmnPzgZhgdpDCoNhUThTn45Mz2iJlNhCu7i8gOivq-9oirXoRwP37AkKAqPxY-fUM49gqJAacdV2YW6vIwmi3-mu7FR9B4egytR8Y226qsezSMpareQSYqcHrdZohGCbNhmHxsGHSdA9TwuapOWw8uxyZ_TPSUv1zxHu94"/>
+</div>
+<div class="space-y-3">
+<div class="flex justify-between items-start">
+<h3 class="text-2xl font-headline font-bold text-on-surface">Activated Charcoal &amp; Mint</h3>
+<span class="text-xl font-label text-primary font-medium">$15</span>
+</div>
+<p class="text-sm font-label uppercase tracking-widest text-secondary font-semibold">Fragrance: Cool &amp; Earthy</p>
+<p class="text-on-surface-variant leading-relaxed text-sm">
+                                A powerful clarifying bar that deeply cleanses pores without stripping the skin's natural protective barrier.
+                            </p>
+<div class="flex flex-wrap gap-2 pt-2">
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Deep Clean</span>
+<span class="text-[10px] px-2 py-1 rounded-full bg-surface-container-high text-on-surface-variant font-label uppercase">Oily Skin</span>
+</div>
+<button class="honey-glow w-full mt-4 py-4 rounded-xl text-on-primary font-label text-xs uppercase tracking-widest font-bold md:opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-all duration-300 transform md:translate-y-0 lg:translate-y-2 lg:group-hover:translate-y-0 shadow-lg">
+                                Add to Ritual
+                            </button>
+</div>
+</div>
+</div>
+<!-- Pagination/Load More -->
+<div class="mt-20 flex justify-center">
+<button class="px-10 md:px-12 py-4 border border-outline-variant rounded-full font-label text-xs uppercase tracking-[0.2em] hover:bg-primary hover:text-on-primary hover:border-primary transition-all duration-500">
+                        Discover More
+                    </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer Shell -->
+<footer class="bg-[#f0ede8] dark:bg-[#2a2a26] mt-20 transition-colors">
+<div class="flex flex-col md:flex-row md:flex-wrap lg:flex-nowrap justify-between items-start w-full px-6 md:px-12 lg:px-20 py-16 gap-y-12 md:gap-y-16 lg:gap-y-0 max-w-[1920px] mx-auto">
+<div class="space-y-6 w-full lg:max-w-sm">
+<h2 class="text-xl font-headline font-serif text-[#7b5800]">Honey Bee</h2>
+<p class="text-on-surface-variant leading-relaxed text-sm font-body max-w-md">
+                    Harnessing the ancient wisdom of Ayurveda to create modern botanical rituals. Our soaps are small-batch, sustainably sourced, and poured with intention.
+                </p>
+<p class="text-[#4f4634] dark:text-[#d3c5ae] text-xs font-label opacity-80">© 2024 Honey Bee Atelier. Handcrafted with intention.</p>
+</div>
+<div class="grid grid-cols-2 gap-12 md:gap-24 lg:gap-24">
+<div class="space-y-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-[#7b5800]">The Studio</h4>
+<nav class="flex flex-col space-y-3">
+<a class="text-sm font-body text-[#4f4634] dark:text-[#d3c5ae] hover:underline decoration-[#d3c5ae] underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Our Story</a>
+<a class="text-sm font-body text-[#4f4634] dark:text-[#d3c5ae] hover:underline decoration-[#d3c5ae] underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Sustainability</a>
+<a class="text-sm font-body text-[#4f4634] dark:text-[#d3c5ae] hover:underline decoration-[#d3c5ae] underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Ingredients</a>
+</nav>
+</div>
+<div class="space-y-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-[#7b5800]">Care</h4>
+<nav class="flex flex-col space-y-3">
+<a class="text-sm font-body text-[#4f4634] dark:text-[#d3c5ae] hover:underline decoration-[#d3c5ae] underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Shipping</a>
+<a class="text-sm font-body text-[#4f4634] dark:text-[#d3c5ae] hover:underline decoration-[#d3c5ae] underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Returns</a>
+<a class="text-sm font-body text-[#4f4634] dark:text-[#d3c5ae] hover:underline decoration-[#d3c5ae] underline-offset-4 opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy Policy</a>
+</nav>
+</div>
+</div>
+<div class="w-full md:w-auto space-y-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-[#7b5800]">Newsletter</h4>
+<div class="flex border-b border-outline-variant pb-2 max-w-sm">
+<input class="bg-transparent border-none focus:ring-0 text-sm font-body w-full placeholder:italic" placeholder="Your essence (email)" type="email"/>
+<button class="text-primary font-label text-xs uppercase tracking-widest font-bold ml-4">Join</button>
+</div>
+<div class="flex space-x-4 pt-4">
+<a class="text-primary hover:opacity-70 transition-opacity" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="text-primary hover:opacity-70 transition-opacity" href="#"><span class="material-symbols-outlined">camera</span></a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

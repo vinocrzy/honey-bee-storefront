@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400&amp;family=Manrope:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#7b5800",
+                    "on-error-container": "#93000a",
+                    "on-background": "#1c1c19",
+                    "secondary-fixed": "#e0e5cc",
+                    "secondary-fixed-dim": "#c4c9b1",
+                    "on-secondary": "#ffffff",
+                    "surface": "#fcf9f4",
+                    "on-tertiary-container": "#6a2906",
+                    "on-tertiary": "#ffffff",
+                    "on-secondary-fixed": "#191d0e",
+                    "tertiary-fixed-dim": "#ffb596",
+                    "on-secondary-fixed-variant": "#444937",
+                    "inverse-on-surface": "#f3f0eb",
+                    "surface-bright": "#fcf9f4",
+                    "background": "#fcf9f4",
+                    "on-primary": "#ffffff",
+                    "surface-container": "#f0ede8",
+                    "on-surface": "#1c1c19",
+                    "inverse-primary": "#f7bd48",
+                    "surface-container-low": "#f6f3ee",
+                    "surface-variant": "#e5e2dd",
+                    "surface-dim": "#dcdad5",
+                    "outline": "#817662",
+                    "on-primary-container": "#513900",
+                    "secondary": "#5c614d",
+                    "on-tertiary-fixed-variant": "#76320f",
+                    "tertiary": "#944925",
+                    "primary-container": "#d59f2b",
+                    "primary-fixed-dim": "#f7bd48",
+                    "outline-variant": "#d3c5ae",
+                    "primary": "#7b5800",
+                    "surface-container-high": "#ebe8e3",
+                    "error": "#ba1a1a",
+                    "on-secondary-container": "#626753",
+                    "surface-container-highest": "#e5e2dd",
+                    "surface-container-lowest": "#ffffff",
+                    "on-primary-fixed": "#271900",
+                    "on-primary-fixed-variant": "#5d4200",
+                    "error-container": "#ffdad6",
+                    "primary-fixed": "#ffdea6",
+                    "inverse-surface": "#31302d",
+                    "secondary-container": "#e0e5cc",
+                    "tertiary-fixed": "#ffdbcd",
+                    "on-surface-variant": "#4f4634",
+                    "tertiary-container": "#ee9066",
+                    "on-tertiary-fixed": "#360f00",
+                    "on-error": "#ffffff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "1.5rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Noto Serif"],
+                    "body": ["Manrope"],
+                    "label": ["Manrope"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 200, 'GRAD' 0, 'opsz' 24;
+        }
+        .font-serif { font-family: 'Noto Serif', serif; }
+        .font-sans { font-family: 'Manrope', sans-serif; }
+        .honey-glow {
+            background: linear-gradient(135deg, #7b5800 0%, #d59f2b 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-sans selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar -->
+<nav class="bg-[#fcf9f4]/80 dark:bg-[#1c1c19]/80 backdrop-blur-md text-[#7b5800] dark:text-[#d59f2b] docked full-width top-0 sticky z-50 no-border tonal-shift-bg flat no shadows flex justify-between items-center w-full px-8 md:px-12 py-6 max-w-[1920px] mx-auto">
+<div class="text-2xl font-serif text-[#7b5800] dark:text-[#d59f2b] tracking-tight">Honey Bee</div>
+<div class="hidden md:flex gap-8 lg:gap-12 items-center">
+<a class="text-[#7b5800] border-b border-[#7b5800] pb-1 font-label text-xs lg:text-sm uppercase tracking-widest transition-colors duration-300" href="#">Shop Soaps</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] hover:text-[#7b5800] transition-colors duration-300 font-label text-xs lg:text-sm uppercase tracking-widest" href="#">Collections</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] hover:text-[#7b5800] transition-colors duration-300 font-label text-xs lg:text-sm uppercase tracking-widest" href="#">Oils</a>
+<a class="text-[#4f4634] dark:text-[#d3c5ae] hover:text-[#7b5800] transition-colors duration-300 font-label text-xs lg:text-sm uppercase tracking-widest" href="#">Our Story</a>
+</div>
+<div class="flex items-center gap-6">
+<button class="hover:text-[#7b5800] transition-colors duration-300 scale-95 duration-200 transition-transform">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="hover:text-[#7b5800] transition-colors duration-300 scale-95 duration-200 transition-transform">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button class="md:hidden">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</nav>
+<main class="max-w-[1920px] mx-auto">
+<!-- Hero Section: Editorial Gallery -->
+<section class="px-8 md:px-12 lg:px-20 py-12 grid grid-cols-1 md:grid-cols-1 gap-12 lg:grid-cols-12 items-start">
+<div class="lg:col-span-7 grid grid-cols-2 gap-4">
+<div class="col-span-2 aspect-[4/5] md:aspect-[16/9] lg:aspect-[4/5] overflow-hidden rounded-xl">
+<img class="w-full h-full object-cover" data-alt="close-up of an artisan handmade soap bar with visible wildflower petals and a golden honey swirl, soft natural morning light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDcb9S0o5M2qmIP0fqq1lquwT_08I9YR2NbWB_QUv_VGNr_lN6RAobuguByABDLaJlgS2j721ysu9G9PdjcDxCSC2h_S1N7X7EEK68diNNPCYnJdTRQdqncJBZaPZt087sVz55d2n4hmPS8xoGWzOVd3COakivShdvTTD32aMYkB6tlMk2meftO4pogVuWbX7JqAu8QFFyZM6iLPkcFU0V6TJxpmkBvDm_V38S1Js2JwZUJbbC9HIIfiQYlQ_o_2dkmdYu0tx6iSOKp"/>
+</div>
+<div class="aspect-square overflow-hidden rounded-xl">
+<img class="w-full h-full object-cover" data-alt="macro texture of cold processed soap showing creamy lather and botanical flecks, warm organic aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC5TvWE10XxNXcSIbpYeJvnC-7rtXuyownBxuQRrJ0ChJ05SB7SICIM4K27s6xCD5Y-xIhVdRy_OAm1Ir86-qcc9P453jeWNwlRlyaIsXpY_cUTiNZUy_ZB8X9LzvgpobEdom6PNYt1vFqbxpcZemYxeTq2fZ-lKP-hmjkU5Z7Z6uUdz3OHnSBFCyUzbUMVbESETiQYad6o5tCFE09TrYgkFnPA3Oev6grC9V6Iy2eI6iCrwo7VQ1h2_f95Rhd7uav0oSNGTFBYN6mR"/>
+</div>
+<div class="aspect-square overflow-hidden rounded-xl">
+<img class="w-full h-full object-cover" data-alt="overhead view of raw honeycomb and dried lavender sprigs on a rustic wooden table with soft shadows" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOfNomTcgkP3-2GraoREvD_kgSo3u1IgQFiHsuvnOcyJXbx3Fs0cc9x8rINf0c7kLTV861QajH2lCluokyT-5DnIxPC8Eg4JdeQR21ynR6evQDxtxsyM-C0s0P2TF2p3C24eMASUhHt43r3ukon3ECPzBIAFFKXYJyWqrADwiwUO6oY2J4FWZn259wVCm9G8IFzSsE7K4cPteb4AtTyZB1GKEHDO8-AA8GiXce0CmvIbhLibgftQWCuz2FnfDqVM0CUNxN8GuV5mpS"/>
+</div>
+</div>
+<div class="lg:col-span-5 md:max-w-2xl md:mx-auto lg:mx-0 lg:sticky lg:top-32 space-y-8">
+<div class="space-y-4">
+<p class="text-primary font-label uppercase tracking-widest text-sm">Wildflower Collection</p>
+<h1 class="text-4xl md:text-5xl font-serif text-on-surface leading-tight tracking-tight">Wildflower &amp; Honey Bar</h1>
+<p class="text-2xl font-serif text-primary">$22.00</p>
+</div>
+<div class="space-y-4 text-on-surface-variant leading-relaxed">
+<p class="text-lg">A botanical masterpiece forged through the slow, cold-process tradition. This bar captures the essence of a sun-drenched meadow, blending raw local honey with hand-picked wildflowers to soothe and nourish delicate skin.</p>
+</div>
+<div class="flex flex-col gap-4">
+<button class="honey-glow text-on-primary py-5 rounded-xl font-label uppercase tracking-widest text-sm font-bold shadow-lg shadow-primary/10 transition-transform active:scale-95">
+                    Add to Atelier Basket
+                </button>
+<button class="text-primary py-4 font-label uppercase tracking-widest text-xs font-semibold hover:underline decoration-outline-variant underline-offset-8 transition-all">
+                    Find in a Boutique Near You
+                </button>
+</div>
+<div class="pt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6">
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'wght' 300;">eco</span>
+<p class="text-sm">100% Biodegradable &amp; Plastic-Free</p>
+</div>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<span class="material-symbols-outlined text-secondary" style="font-variation-settings: 'wght' 300;">history_toggle_off</span>
+<p class="text-sm">Cured for 6 weeks for maximum longevity</p>
+</div>
+</div>
+</div>
+</section>
+<!-- The Nurse's Note: Clinical & Organic Blend -->
+<section class="bg-surface-container py-24 px-8 md:px-12 lg:px-20 mt-20">
+<div class="max-w-4xl mx-auto space-y-12">
+<div class="text-center space-y-4">
+<h2 class="text-3xl font-serif italic text-on-surface">The Nurse's Note</h2>
+<div class="h-px w-24 bg-primary/20 mx-auto"></div>
+</div>
+<div class="grid md:grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+<div class="space-y-6 text-center lg:text-left">
+<p class="text-xl font-serif leading-relaxed text-on-surface">"Honey is nature's humectant. In this formulation, we've focused on pH balance and lipid restoration, ensuring that even the most sensitive barriers feel protected, not stripped."</p>
+<p class="font-label text-sm uppercase tracking-widest font-bold text-primary">— Sarah J., Founder &amp; Lead Formulator</p>
+</div>
+<div class="bg-surface-container-lowest p-8 md:p-10 rounded-xl space-y-6">
+<h3 class="font-label text-xs uppercase tracking-widest text-secondary font-bold">Key Benefits</h3>
+<ul class="space-y-4">
+<li class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<p class="text-sm text-on-surface-variant">Anti-inflammatory properties from raw wildflower pollen.</p>
+</li>
+<li class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<p class="text-sm text-on-surface-variant">Deep hydration via natural glycerin retention.</p>
+</li>
+<li class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-primary text-sm mt-1">check_circle</span>
+<p class="text-sm text-on-surface-variant">Silky texture that calms redness and irritation.</p>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<!-- Ingredients Bento Grid -->
+<section class="px-8 md:px-12 lg:px-20 py-32">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+<div class="lg:col-span-1 flex flex-col justify-center space-y-6 text-center lg:text-left">
+<h2 class="text-3xl md:text-4xl font-serif leading-tight">The Pure Alchemy of Ingredients</h2>
+<p class="text-on-surface-variant leading-relaxed max-w-lg mx-auto lg:mx-0">No synthetics. No fillers. Only the slow-moving essence of the botanical world.</p>
+<a class="text-primary font-bold text-sm uppercase tracking-widest inline-flex items-center justify-center lg:justify-start gap-2 group" href="#">
+                    View Full Transparency List
+                    <span class="material-symbols-outlined text-sm group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</a>
+</div>
+<div class="lg:col-span-2 grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4">
+<div class="bg-surface-container-low p-6 md:p-8 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-3xl text-primary">local_florist</span>
+<h4 class="font-bold text-on-surface">Wildflower Petals</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Gently exfoliates and releases subtle aromatic compounds.</p>
+</div>
+<div class="bg-secondary-container p-6 md:p-8 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-3xl text-secondary">water_drop</span>
+<h4 class="font-bold text-on-surface">Raw Local Honey</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">A natural antimicrobial that locks moisture into the epidermis.</p>
+</div>
+<div class="bg-surface-container-low p-6 md:p-8 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-3xl text-primary">psychiatry</span>
+<h4 class="font-bold text-on-surface">Cold-Pressed Olive Oil</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">The base of our soap, chosen for its antioxidant-rich profile.</p>
+</div>
+<div class="bg-surface-container-low p-6 md:p-8 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-3xl text-primary">waves</span>
+<h4 class="font-bold text-on-surface">Botanical Essential Oils</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">A proprietary blend of Lavender and Geranium.</p>
+</div>
+<div class="bg-surface-container-low p-6 md:p-8 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-3xl text-primary">cloud</span>
+<h4 class="font-bold text-on-surface">White Kaolin Clay</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">Detoxifies pores without stripping the skin's natural oils.</p>
+</div>
+<div class="bg-surface-container-low p-6 md:p-8 rounded-xl space-y-4">
+<span class="material-symbols-outlined text-3xl text-primary">sunny</span>
+<h4 class="font-bold text-on-surface">Vitamin E</h4>
+<p class="text-xs text-on-surface-variant leading-relaxed">A natural preservative that fights free radical damage.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Usage & Story Section (Asymmetric) -->
+<section class="grid grid-cols-1 md:grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-center px-8 md:px-12 lg:px-20 py-24">
+<div class="relative md:max-w-xl md:mx-auto lg:mx-0 lg:ml-auto">
+<img class="w-full md:w-4/5 rounded-xl ml-auto" data-alt="blurred artistic shot of soap bubbles reflecting warm light, ethereal and calming botanical atmosphere" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXKRtWAiMRAHzObboj9MzB4Brndj5jiW9P4-M7hdttlC2GrC87HQGdVyC_pDhwq7a_b-zDFWcQCDmtr7dJLrfQM2BGaPgLfgxXPzsaSP9rkmwUqTaY5evsOTs8PDghIOR3DxFLVMtHXVwLOR2yzGbKKraIICaZ48MC7emsoWCn9kRz1VfSlXzm1kv10aiswg37gFuHkkLhWd-VSQ6lXcyenARL_rA5BkQghnglTXrON8IoKruI2oIsGVeK0Q1d8neWLO5sW0Q_mG5_"/>
+<div class="absolute -bottom-10 -left-4 md:left-0 bg-surface-container-lowest p-8 md:p-12 rounded-xl shadow-xl max-w-[280px] md:max-w-sm">
+<h3 class="font-serif text-xl md:text-2xl mb-4">The Cold Process</h3>
+<p class="text-sm text-on-surface-variant leading-relaxed">We wait six weeks for every bar. This patient curing process ensures a harder, longer-lasting bar with a rich, creamy lather.</p>
+</div>
+</div>
+<div class="space-y-10 md:max-w-2xl md:mx-auto lg:mx-0 pt-10 lg:pt-0">
+<div class="space-y-4">
+<h2 class="text-3xl md:text-4xl font-serif">Usage Ritual</h2>
+<p class="text-on-surface-variant">Elevate your daily cleansing into a moment of intentionality.</p>
+</div>
+<div class="space-y-8">
+<div class="flex gap-6">
+<span class="text-2xl md:text-3xl font-serif text-outline-variant">01.</span>
+<p class="text-sm text-on-surface-variant mt-1.5 md:mt-2 leading-relaxed">Wet the bar and create a lather in your hands or on a natural sea sponge. Breathe in the botanical oils.</p>
+</div>
+<div class="flex gap-6">
+<span class="text-2xl md:text-3xl font-serif text-outline-variant">02.</span>
+<p class="text-sm text-on-surface-variant mt-1.5 md:mt-2 leading-relaxed">Massage gently onto damp skin in circular motions. The clay and honey work to lift impurities while nourishing.</p>
+</div>
+<div class="flex gap-6">
+<span class="text-2xl md:text-3xl font-serif text-outline-variant">03.</span>
+<p class="text-sm text-on-surface-variant mt-1.5 md:mt-2 leading-relaxed">Rinse with cool water. Pat dry and follow with our 'Morning Sun' Botanical Oil to lock in moisture.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Reviews: Premium Testimonials -->
+<section class="bg-[#f6f3ee] py-32 px-8 md:px-12 lg:px-20">
+<div class="max-w-6xl mx-auto space-y-16">
+<div class="flex flex-col md:flex-row justify-between items-center md:items-end gap-6 text-center md:text-left">
+<div class="space-y-2">
+<h2 class="text-3xl md:text-4xl font-serif">Community Whispers</h2>
+<div class="flex items-center justify-center md:justify-start gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="ml-2 text-sm font-label text-on-surface-variant">4.9/5 from 320 reviews</span>
+</div>
+</div>
+<button class="text-primary font-bold text-sm uppercase tracking-widest border-b border-primary/20 pb-1">Write a review</button>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
+<div class="space-y-6">
+<p class="text-lg font-serif italic text-on-surface leading-relaxed">"This is not just soap, it’s a sensory experience. The way it leaves my skin feeling hydrated rather than tight is something I've never found before."</p>
+<div>
+<p class="font-bold text-sm">Elena R.</p>
+<p class="text-xs text-outline tracking-wider uppercase mt-1">Verified Collector</p>
+</div>
+</div>
+<div class="space-y-6">
+<p class="text-lg font-serif italic text-on-surface leading-relaxed">"The scent is heavenly. It lingers in the bathroom like a fresh garden. It’s become the best part of my morning routine."</p>
+<div>
+<p class="font-bold text-sm">Julian M.</p>
+<p class="text-xs text-outline tracking-wider uppercase mt-1">Verified Collector</p>
+</div>
+</div>
+<div class="space-y-6 md:col-span-2 lg:col-span-1 md:max-w-md md:mx-auto lg:mx-0">
+<p class="text-lg font-serif italic text-on-surface leading-relaxed">"I have very reactive skin and this bar has been a godsend. No redness, just soft and clean skin. Highly recommend the wildflower blend."</p>
+<div>
+<p class="font-bold text-sm">Sophia K.</p>
+<p class="text-xs text-outline tracking-wider uppercase mt-1">Verified Collector</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Related: Complete the Ritual -->
+<section class="px-8 md:px-12 lg:px-20 py-32">
+<div class="space-y-16">
+<div class="text-center">
+<h2 class="text-3xl md:text-4xl font-serif">Complete the Ritual</h2>
+<p class="text-on-surface-variant mt-4">Curated pairings to enhance your botanical journey.</p>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+<div class="group cursor-pointer space-y-4 lg:space-y-6">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="elegant amber glass bottle of botanical face oil on a stone surface with soft natural light" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBpMean2_TADcB7OpF8rcdJeexroaokdDEZfQqkSivyI9ZMVBYjkkjS1VOe41sr4x7Oac6c1c_Jr70kmgZMqcI0ZQU7wlTBHf3hNECynHddvFkO7DXpiakNyHiIuLs5t1AEw46TajtkeyJ_tsKTETsPP-HdyvfyWqsaWBKNHLt2-VIvN5HVkUiuIL3JtLkP24Nk511ZMezz_gP_A3Fm1tCWa2AjRGBDirVtCKTJRpbTVdqdRVlPA4NDrUmQUBPSoCxd28lGX2W7PGAg"/>
+<div class="absolute top-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Oils</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-serif text-lg md:text-xl">Golden Hour Elixir</h3>
+<p class="text-primary font-bold text-sm md:text-base">$48.00</p>
+</div>
+</div>
+<div class="group cursor-pointer space-y-4 lg:space-y-6">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="artisanal soap bar with rosemary sprigs and sea salt crystals, moody and organic textures" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA36eDsczGenBBa39SPnLSU007pyKCigggXIADWoo2vZ-BtDBkPEFuEKTORIQnOAMI6xJYKQJaFO_N2BUiZmpdG_RAnSlK739xmxwzF7EAb_YLGdodSIo8czKCi4jwiotbUjYaMYkpBt5EzfwJBaE7ZypzRXCtIo9ypQ-kp2j7sIMMIT7_9IhukQdZAw2RVa_5j6NuUODvMH1J4RZCJuDUz_Ou4dLblkEDKLoC_QXeaPfxOtVSHBRxRS_Q1nztJX-Ypf4v-Q8_TXxqk"/>
+<div class="absolute top-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Soaps</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-serif text-lg md:text-xl">Rosemary &amp; Sea Salt</h3>
+<p class="text-primary font-bold text-sm md:text-base">$22.00</p>
+</div>
+</div>
+<div class="group cursor-pointer space-y-4 lg:space-y-6">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="white clay and eucalyptus soap bar on a clean minimalist surface, refreshing and bright aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDzQIQmM2TxQ5YmQ7T6KTIhAdw7RTEIQBeXFARgoLgvrA1NE6NntB0rGgfxZeyhRDu79nXW4W8tR0nt_lBA9ijJCYaltjQnO_e1B7yreLsLaBzCqu29KVrUI5EcO6MXh3MmdGjo5_lCxZSVORCiqYbEESoOArRJtTtfqlgejqCm5VWJSy9i2vkeVqU23XD8NkOsRWlWxr0sg7d0yLmtQAHH5hdW5Mabzak5ln4078PMmLR2g8pSaA2NNDyi4tzSJtNimT33aq8CAS81"/>
+<div class="absolute top-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Soaps</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-serif text-lg md:text-xl">Eucalyptus &amp; Clay</h3>
+<p class="text-primary font-bold text-sm md:text-base">$22.00</p>
+</div>
+</div>
+<div class="group cursor-pointer space-y-4 lg:space-y-6">
+<div class="aspect-[3/4] overflow-hidden rounded-xl bg-surface-container relative">
+<img class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="wooden soap dish with a textured linen washcloth in a spa-like setting with soft focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1r_9VhMdPhS1s1C6vEZ0DECrTSdZb00ECFbok-uUWeGl0Eilf-BWtlxfkaQUS2Gl9m2tdoDmAq-255FCmIObY-Wn-r5VwmSXEa9V4PKygxvM0JOZMfMH3pNbRF39fFF9hb4PGwXinMZahAEqnG_TuV5X57QKAgCEq_GLcBCjGLgoqa4cftdUJTewSQHRg7bY7IkF-Ba1o2k_hqltHI1K1wU2U3e14-z7unEAIIAvHKm3WM0EjWmCCSRxxXYTDfTrpaAg-U16b8IOR"/>
+<div class="absolute top-4 right-4 bg-surface-container-lowest/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-tighter">Tools</div>
+</div>
+<div class="space-y-2">
+<h3 class="font-serif text-lg md:text-xl">Cedarwood Soap Deck</h3>
+<p class="text-primary font-bold text-sm md:text-base">$18.00</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#f0ede8] dark:bg-[#2a2a26] text-[#7b5800] dark:text-[#d59f2b] full-width mt-20 tonal-shift-bg-only flat no shadows flex flex-col md:flex-row flex-wrap lg:flex-nowrap justify-between items-start w-full px-8 md:px-12 lg:px-20 py-16 space-y-12 md:space-y-12 lg:space-y-0">
+<div class="space-y-6 max-w-sm w-full md:w-full lg:w-auto">
+<div class="text-xl font-serif text-[#7b5800]">Honey Bee</div>
+<p class="text-[#4f4634] dark:text-[#d3c5ae] font-body leading-relaxed text-sm">
+            Crafting small-batch, Ayurvedic-inspired skincare in our seaside atelier. We believe in the luxury of the slow-made and the wisdom of the botanical world.
+        </p>
+<div class="flex gap-4">
+<a class="opacity-80 hover:opacity-100 transition-opacity" href="#"><span class="material-symbols-outlined">public</span></a>
+<a class="opacity-80 hover:opacity-100 transition-opacity" href="#"><span class="material-symbols-outlined">mail</span></a>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-16 md:gap-24">
+<div class="space-y-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface">Atelier</h4>
+<div class="flex flex-col space-y-2 text-sm text-[#4f4634] dark:text-[#d3c5ae]">
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Sustainability</a>
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Shipping</a>
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Returns</a>
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Privacy Policy</a>
+</div>
+</div>
+<div class="space-y-4">
+<h4 class="font-label text-xs uppercase tracking-widest font-bold text-on-surface">Connect</h4>
+<div class="flex flex-col space-y-2 text-sm text-[#4f4634] dark:text-[#d3c5ae]">
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Journal</a>
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Stockists</a>
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Wholesale</a>
+<a class="hover:underline decoration-[#d3c5ae] underline-offset-4 transition-opacity" href="#">Contact</a>
+</div>
+</div>
+</div>
+<div class="w-full pt-8 border-t border-outline-variant/10 lg:w-auto lg:pt-0 lg:border-none lg:self-end">
+<p class="text-xs text-[#4f4634] dark:text-[#d3c5ae] font-body">© 2024 Honey Bee Atelier. Handcrafted with intention.</p>
+</div>
+</footer>
+</body></html>
