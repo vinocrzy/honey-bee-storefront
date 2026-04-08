@@ -1,41 +1,41 @@
 /**
- * Default Theme Configuration
- * This serves as the fallback theme when store-specific theme is not available
+ * Honey Bee Store - Theme Configuration
+ * Natural, organic theme for handmade soaps and oils
  */
 
 import type { ThemeConfig } from '@/types/theme';
 
 export const defaultTheme: ThemeConfig = {
   colors: {
-    // Primary brand colors
-    primary: '#3b82f6', // Blue-500
-    primaryHover: '#2563eb', // Blue-600
-    secondary: '#8b5cf6', // Violet-500
-    secondaryHover: '#7c3aed', // Violet-600
-    accent: '#f59e0b', // Amber-500
+    // Primary brand colors - Honey Gold
+    primary: '#F59E0B', // Amber-500 (Honey Gold)
+    primaryHover: '#D97706', // Amber-600 (Deep Amber)
+    secondary: '#10B981', // Emerald-500 (Natural Green)
+    secondaryHover: '#059669', // Emerald-600 (Deep Green)
+    accent: '#FCD34D', // Amber-300 (Light Honey)
 
-    // Base colors
-    background: '#ffffff',
-    foreground: '#0f172a', // Slate-900
-    muted: '#f1f5f9', // Slate-100
-    mutedForeground: '#64748b', // Slate-500
+    // Base colors - Warm, Natural
+    background: '#FFFBEB', // Amber-50 (Warm Cream)
+    foreground: '#78350F', // Amber-950 (Natural Brown)
+    muted: '#FEF3C7', // Amber-100 (Soft Beige)
+    mutedForeground: '#92400E', // Amber-800 (Muted Brown)
 
     // UI colors
-    border: '#e2e8f0', // Slate-200
-    input: '#e2e8f0',
-    ring: '#3b82f6',
+    border: '#FDE68A', // Amber-200 (Soft Honey Border)
+    input: '#FEF3C7', // Amber-100
+    ring: '#F59E0B', // Honey Gold
 
     // Status colors
-    success: '#10b981', // Green-500
-    warning: '#f59e0b', // Amber-500
-    error: '#ef4444', // Red-500
-    info: '#3b82f6', // Blue-500
+    success: '#10B981', // Green-500 (Natural Growth)
+    warning: '#F59E0B', // Amber-500 (Honey Alert)
+    error: '#DC2626', // Red-600 (Natural Red)
+    info: '#06B6D4', // Cyan-500 (Fresh Info)
   },
 
   typography: {
     fontFamily: {
-      sans: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
-      serif: 'Georgia, Cambria, "Times New Roman", Times, serif',
+      sans: '"Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif',
+      serif: '"Playfair Display", Georgia, Cambria, "Times New Roman", Times, serif',
       mono: 'Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
     },
     fontSize: {
@@ -57,10 +57,10 @@ export const defaultTheme: ThemeConfig = {
   },
 
   logo: {
-    url: null,
-    altText: 'Store Logo',
-    width: 150,
-    height: 50,
+    url: '/images/honey-bee-logo.png',
+    altText: 'Honey Bee - Natural Handmade Soaps & Oils',
+    width: 180,
+    height: 60,
   },
 
   borderRadius: {
