@@ -100,15 +100,6 @@ export function Header() {
           </button>
         </div>
       </div>
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-primary"
-            >
-              <MagnifyingGlassIcon className="h-5 w-5" />
-            </button>
-          </div>
-        </form>
-      </div>
 
       {/* Mobile overlay menu */}
       {isMobileMenuOpen && (

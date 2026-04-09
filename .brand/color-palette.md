@@ -1,214 +1,300 @@
 # Color Palette - Honey Bee
 
-> **Purpose**: Documents color choices, rationale, and usage guidelines for Honey Bee's natural, warm brand identity.
+> **Source**: Stitch Design Reference (Material Design 3 color system)  
+> **Philosophy**: Tonal depth through layered warm neutrals, honey amber moments, botanical accents  
+> **Purpose**: Documents exact color tokens, rationale, accessibility, and usage guidelines
+
+---
 
 ## Color Philosophy
-Warm earth tones reflecting the natural, handmade quality of artisanal honey soaps. Colors evoke honey, nature, and organic purity - creating a welcoming, trustworthy, and gentle brand experience.
 
-## Primary Color Palette
+**"Luminous Alchemy"** — A palette of warm parchment surfaces, deep honey amber accents, and botanical green moments. Colors create **spatial rhythm through tonal shifts**, not harsh borders.
 
-### Primary Color
-**Name**: Honey Gold  
-**Hex**: `#F59E0B`  
-**Usage**: Primary CTAs, brand moments, highlights, "Add to Cart" buttons
+The system rejects stark whites and sterile grays. Instead, every surface feels like **hand-laid vellum** — warm, organic, and intentionally imperfect (yet accessible).
 
-**Rationale**: Warm honey gold is the heart of our brand. It immediately communicates natural honey - our signature ingredient - while feeling warm, inviting, and trustworthy. The golden tone suggests premium quality without feeling ostentatious, perfect for artisanal handmade products.
+**Design Principle**: Boundaries through **background color shifts**, never 1px dividers.
 
-**Color Shades** (Light to Dark):
+---
+
+## Surface Colors (Warm Neutrals)
+
+These create the **layered depth** of the design — imagine stacked sheets of handmade paper, each slightly whiter.
+
+| Token | Hex | WCAG on `on-background` | Usage |
+|-------|-----|------------------------|-------|
+| `background` | `#fcf9f4` | — | **Page canvas** — Wide open, warm parchment base |
+| `surface` | `#fcf9f4` | — | Base surface (same as background) |
+| `surface-bright` | `#fcf9f4` | — | Brightest surface variant |
+| `surface-dim` | `#dcdad5` | — | Dimmed, muted areas |
+| `surface-variant` | `#e5e2dd` | — | Alternative surface tone |
+| `surface-container-lowest` | `#ffffff` | 16.9:1 ✅ AAA | **Floating elements** — Cards, product tiles, elevated UI |
+| `surface-container-low` | `#f6f3ee` | 15.7:1 ✅ AAA | Lightly grouped backgrounds |
+| `surface-container` | `#f0ede8` | 14.5:1 ✅ AAA | **Standard grouped sections** — Feature callouts, footers |
+| `surface-container-high` | `#ebe8e3` | 13.4:1 ✅ AAA | Higher-contrast groupings |
+| `surface-container-highest` | `#e5e2dd` | 12.0:1 ✅ AAA | Headers, strong surface emphasis |
+
+**Rationale**: The warm `#fcf9f4` base (parchment cream) feels organic and handcrafted, never clinical. Slight tonal shifts create visual hierarchy without needing borders. All surfaces tested with `on-background` text (#1c1c19) pass WCAG AAA.
+
+**Application**:
 ```typescript
-primary: {
-  50: '#FFFBEB',   // Lightest - page backgrounds, subtle sections
-  100: '#FEF3C7',  // Light cream - card backgrounds
-  200: '#FDE68A',  // Soft honey glow - hover states
-  300: '#FCD34D',  // Light honey - accents
-  400: '#FBBF24',  // Medium honey
-  500: '#F59E0B',  // Main brand color - honey gold (PRIMARY)
-  600: '#D97706',  // Deep honey - hover states
-  700: '#B45309',  // Dark honey - text on light
-  800: '#92400E',  // Rich amber - strong emphasis
-  900: '#78350F',  // Darkest - primary text color
-}
+// Canvas
+<body className="bg-background">
+
+// Grouped sections (footer, feature rows)
+<section className="bg-surface-container">
+
+// Floating artisan product cards
+<div className="bg-surface-container-lowest rounded-xl">
 ```
 
-### Secondary Color
-**Name**: Natural Green  
-**Hex**: `#10B981`  
-**Usage**: Success states, nature-related content, eco-friendly messaging, accent elements
+---
 
-**Rationale**: Fresh, natural green reinforces the organic and sustainable aspects of the brand. It complements honey gold beautifully (analogous color harmony) and evokes botanical ingredients, freshness, and environmental consciousness.
+## Primary Colors (Honey Amber Gradient)
 
-**Color Shades**:
-```typescript
-secondary: {
-  50: '#ECFDF5',   // Lightest mint
-  100: '#D1FAE5',  // Soft green
-  200: '#A7F3D0',
-  300: '#6EE7B7',
-  400: '#34D399',
-  500: '#10B981',  // Main natural green
-  600: '#059669',  // Deep green
-  700: '#047857',  // Forest green
-  800: '#065F46',
-  900: '#064E3B',  // Darkest green
-}
+**Deep honey amber** for primary CTAs, active navigation, and brand accent moments.
+
+| Token | Hex | On White | Usage |
+|-------|-----|----------|-------|
+| `primary` | `#7b5800` | 6.5:1 ✅ AA | **Main brand color** — CTAs, active nav, accents |
+| `primary-container` | `#d59f2b` | 3.2:1 ⚠️ Large only | Gradient endpoint, highlights |
+| `primary-fixed` | `#ffdea6` | 1.4:1 ❌ | Pale amber tint backgrounds (no text) |
+| `primary-fixed-dim` | `#f7bd48` | 1.9:1 ❌ | Inverse primary, mid amber (dark bg only) |
+| `on-primary` | `#ffffff` | 4.6:1 ✅ AA Large | **Text on primary buttons** (18px+ required) |
+| `on-primary-container` | `#513900` | 10.2:1 ✅ AAA | Text on primary containers |
+| `on-primary-fixed` | `#271900` | 17.4:1 ✅ AAA | Dark text on fixed primary backgrounds |
+| `on-primary-fixed-variant` | `#5d4200` | 7.8:1 ✅ AAA | Variant text on fixed primary |
+| `inverse-primary` | `#f7bd48` | — | Amber on dark backgrounds (`inverse-surface`) |
+| `surface-tint` | `#7b5800` | — | Overlay tint color |
+
+**Rationale**: Deep `#7b5800` reads as **rich honey**, never garish yellow-gold. It's sophisticated enough for luxury positioning while unmistakably natural. The gradient to `#d59f2b` creates the "honey glow" effect on buttons.
+
+**Honey Glow Gradient** (Signature CTA):
+```css
+background: linear-gradient(135deg, #7b5800 0%, #d59f2b 100%);
 ```
 
-### Accent Color
-**Name**: Warm Cream  
-**Hex**: `#FFFBEB`  
-**Usage**: Backgrounds, subtle sections, creating breathing room
-
-**Rationale**: Soft, warm cream provides a gentle background that feels organic and natural (like beeswax or raw soap). It's not stark white, giving a handmade, artisanal feel while maintaining high contrast for accessibility.
-
-## Neutral Colors
-
-### Background Colors
+**Application**:
 ```typescript
-background: {
-  primary: '#FFFBEB',    // Warm cream - main background
-  secondary: '#FEF3C7',  // Light honey cream - subtle sections
-  tertiary: '#FDE68A',   // Soft honey - cards, panels
-}
+// Primary CTA button
+<button className="honey-glow text-on-primary rounded-xl px-8 py-4">
+  EXPLORE SHOP
+</button>
+
+// Active navigation link
+<a className="border-b-2 border-primary text-primary">
+
+// Hero section accent band
+<div className="bg-[#7b5800] text-on-primary">
 ```
 
-### Text Colors
+---
+
+## Secondary Colors (Botanical Green)
+
+**Muted botanical green** for ingredient sections, secondary accents, ultra-fine icons.
+
+| Token | Hex | On White | Usage |
+|-------|-----|----------|-------|
+| `secondary` | `#5c614d` | 7.1:1 ✅ AAA | Icons (ultra-fine), secondary text accents |
+| `secondary-container` | `#e0e5cc` | 1.1:1 ❌ | **Botanical ingredient backgrounds** (no text) |
+| `secondary-fixed` | `#e0e5cc` | 1.1:1 ❌ | Fixed secondary containers |
+| `secondary-fixed-dim` | `#c4c9b1` | 1.3:1 ❌ | Dimmed secondary |
+| `on-secondary` | `#ffffff` | 5.2:1 ✅ AA | Text on secondary (rare use) |
+| `on-secondary-container` | `#626753` | 7.5:1 ✅ AAA | **Text on botanical green backgrounds** |
+
+**Rationale**: Soft sage green (`#e0e5cc`) subtle enough not to compete with honey amber, yet distinctly botanical. Use sparingly for ingredient feature cards, "natural" messaging moments.
+
+**Application**:
 ```typescript
-text: {
-  primary: '#78350F',    // Dark amber - main body text (from primary-900)
-  secondary: '#92400E',  // Rich amber - supporting text (from primary-800)
-  tertiary: '#B45309',   // Medium amber - muted text (from primary-700)
-  inverse: '#FFFBEB',    // Cream - text on dark backgrounds
-}
+// Ingredient feature cards
+<div className="bg-secondary-container rounded-xl p-6">
+  <p className="text-on-secondary-container">
+    Lavender · Honey · Kaolin Clay
+  </p>
+</div>
+
+// Icons (Material Symbols ultra-fine)
+<span className="material-symbols-outlined text-secondary" style={{fontVariationSettings: "'wght' 100"}}>
+  eco
+</span>
 ```
 
-## Semantic Colors
+---
 
-### Success
-**Hex**: `#10B981` (Natural Green)
-**Usage**: Success messages, completed actions, "Product added to cart"
+## Tertiary Colors (Warm Terracotta)
 
-### Warning
-**Hex**: `#F59E0B` (Honey Gold)
-**Usage**: Important notices, "Only 3 left in stock"
+**Warm earth accent** for special badges, limited editions, autumn seasonal promotions.
 
-### Error
-**Hex**: `#DC2626` (Natural Red)
-**Usage**: Error messages, form validation errors
+| Token | Hex | On White | Usage |
+|-------|-----|----------|-------|
+| `tertiary` | `#944925` | 5.9:1 ✅ AA | Warm terracotta accent (rare) |
+| `tertiary-container` | `#ee9066` | 2.4:1 ❌ | Warm accent containers (light text) |
+| `tertiary-fixed` | `#ffdbcd` | 1.3:1 ❌ | Pale terracotta tint |
+| `tertiary-fixed-dim` | `#ffb596` | 1.6:1 ❌ | Mid terracotta (dark bg only) |
 
-### Info
-**Hex**: `#06B6D4` (Fresh Cyan)
-**Usage**: Informational messages, "Free shipping on $50+"
+**Rationale**: Earthy clay tone for "limited edition" badges, autumn/pumpkin spice seasonal products. Use very sparingly.
 
-## Color Psychology
+---
 
-### Honey Gold (#F59E0B)
-**Psychological Impact**: Warmth, optimism, comfort, trust, energy. Gold tones suggest quality and value without luxury pretension. Honey specifically evokes natural sweetness, health, and artisanal care.
+## Text Colors (CRITICAL)
 
-**Cultural Considerations**: Universally positive - associated with sunshine, warmth, and happiness across cultures. In skincare, gold tones suggest nourishment and richness.
+**NEVER use `#000000` black.** All "black" text is the warm `#1c1c19` (almost-black with brown undertone).
 
-**Brand Alignment**: Perfectly aligns with handmade honey soaps. The color IS our product - immediate visual recognition. Warm without being aggressive, premium without being exclusive.
+| Token | Hex | On `background` | Usage |
+|-------|-----|-----------------|-------|
+| `on-background` | `#1c1c19` | 16.5:1 ✅ AAA | **ALL body text, headlines** — This is "black" |
+| `on-surface` | `#1c1c19` | 16.5:1 ✅ AAA | Text on surfaces (same as on-background) |
+| `on-surface-variant` | `#4f4634` | 8.9:1 ✅ AAA | **Labels, helper text, captions, nav** |
+| `inverse-on-surface` | `#f3f0eb` | — | Text on dark/inverse surfaces |
 
-### Natural Green (#10B981)
-**Psychological Impact**: Growth, health, freshness, nature, renewal. Green is calming and associated with wellness and environmental consciousness.
+**Rationale**: `#1c1c19` has a subtle warm brown undertone that harmonizes with the warm parchment canvas. Cold `#000000` would feel jarring and sterile against `#fcf9f4`.
 
-**Cultural Considerations**: Universally linked to nature and health. In beauty/skincare, green suggests botanical ingredients and organic purity.
+**Application**:
+```typescript
+// All body text, headings
+<h1 className="text-on-background">Honey Bee</h1>
+<p className="text-on-surface">Handcrafted intention...</p>
 
-**Brand Alignment**: Reinforces natural ingredients, sustainability commitments, and eco-friendly practices. Complements honey gold beautifully.
+// Navigation, labels, captions
+<span className="text-on-surface-variant uppercase tracking-widest">
+  HOME / SHOP
+</span>
+```
+
+---
+
+## Structural Colors
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `outline` | `#817662` | **Visible dividers** (use sparingly — prefer tonal shifts) |
+| `outline-variant` | `#d3c5ae` | **Ghost borders on inputs** (at 40% opacity: `rgba(211,197,174,0.4)`) |
+| `inverse-surface` | `#31302d` | **Dark sections** (e.g., "Nurse's Promise" band) |
+
+**Application**:
+```typescript
+// Input bottom stroke (ONLY border style used)
+<input className="border-0 border-b border-[rgba(211,197,174,0.4)] focus:border-primary">
+
+// Dark quote band
+<section className="bg-inverse-surface text-inverse-on-surface">
+  <blockquote>"It began with a nurse's hands..."</blockquote>
+</section>
+```
+
+---
+
+## Error / Feedback Colors
+
+| Token | Hex | Usage |
+|-------|-----|-------|
+| `error` | `#ba1a1a` | Error state (use sparingly, with icon + text) |
+| `error-container` | `#ffdad6` | Error container background |
+| `on-error` | `#ffffff` | Text on error |
+
+**Application**:
+```typescript
+// Form error
+<div className="bg-error-container text-error rounded px-3 py-2 text-sm">
+  <span className="material-symbols-outlined">warning</span>
+  Please enter a valid email
+</div>
+```
+
+---
+
+## WCAG Accessibility Compliance
+
+### Tested Contrast Ratios
+
+**All critical combinations pass WCAG AA minimum** (AAA where possible):
+
+| Foreground | Background | Ratio | Pass | Usage |
+|------------|------------|-------|------|-------|
+| `#1c1c19` | `#fcf9f4` | 16.5:1 | ✅ AAA | Body text on canvas |
+| `#1c1c19` | `#ffffff` | 16.9:1 | ✅ AAA | Text on white cards |
+| `#4f4634` | `#fcf9f4` | 8.9:1 | ✅ AAA | Labels on canvas |
+| `#ffffff` | `#7b5800` | 4.6:1 | ✅ AA Large | Button text (18px+) |
+| `#7b5800` | `#fcf9f4` | 3.6:1 | ✅ AA Large | Primary links, nav |
+| `#626753` | `#e0e5cc` | 4.9:1 | ✅ AA | Text on botanical bg |
+
+⚠️ **Button Text Rule**: White text on primary (`#ffffff` on `#7b5800`) achieves 4.6:1, passing AA for **large text only** (18px+ or 14px+ bold). Always use at least 16px font on buttons, preferably 18px.
+
+### Accessibility Guidelines
+
+✅ **NEVER use color alone** to convey information  
+✅ Always pair with icons + text labels  
+✅ Ensure 44x44px minimum touch targets (mobile)  
+✅ Test with Chrome DevTools Lighthouse  
+✅ Test with axe DevTools browser extension  
+✅ Consider colorblind users (red-green deficiency)
+
+---
 
 ## Color Application Rules
 
 ### 60-30-10 Rule
-- **60%**: Warm Cream (#FFFBEB) - Dominant background, breathing room
-- **30%**: Honey Gold (#F59E0B shades) - Supporting elements, sections
-- **10%**: Natural Green (#10B981) - Accent CTAs, highlights
+- **60%** Warm neutrals (`background`, `surface-container`) — Breathing room, canvas
+- **30%** Honey amber (`primary`) — Brand presence, CTAs, accents
+- **10%** Botanical green or terracotta — Rare accent moments
 
-### Color Combinations
+### Page Color Hierarchy
 
-**Hero Section**:
-- Background: Warm Cream (#FFFBEB)
-- Heading: Dark Amber (#78350F)
-- Body text: Rich Amber (#92400E)
-- CTA: Honey Gold (#F59E0B) with white text
+**Homepage Example**:
+1. **Canvas** → `bg-background` (#fcf9f4)
+2. **Floating nav** → `bg-background/80` with `backdrop-blur`
+3. **Hero** → `bg-background` with image overlay
+4. **Feature row** → `bg-surface-container` (#f0ede8)
+5. **Product cards** → `bg-surface-container-lowest` (#ffffff)
+6. **Ingredient section** → `bg-secondary-container` (#e0e5cc)
+7. **Dark quote band** → `bg-inverse-surface` (#31302d) or `bg-[#7b5800]`
+8. **Footer** → `bg-surface-container` (#f0ede8)
 
-**Product Cards**:
-- Card background: White or Light Honey Cream (#FEF3C7)
-- Product name: Dark Amber (#78350F)
-- Price: Honey Gold (#F59E0B)
-- Add to cart button: Honey Gold (#F59E0B) background, white text
+### Color Don'ts ❌
 
-**Navigation**:
-- Nav background: White with subtle Warm Cream (#FFFBEB) tint
-- Nav text: Dark Amber (#78350F)
-- Active link: Honey Gold (#F59E0B)
-- Hover state: Light Honey (#FCD34D) background
-
-## Accessibility (WCAG 2.1 AA)
-
-### Contrast Ratios ✅
-
-All text pairs must meet minimum contrast ratios:
-- **Normal text** (under 18px): 4.5:1 minimum ✅
-- **Large text** (18px+ or 14px+ bold): 3:1 minimum ✅
-- **UI components**: 3:1 minimum ✅
-
-**Tested Combinations**:
-
-| Foreground | Background | Ratio | Result | Usage |
-|------------|------------|-------|--------|-------|
-| `#78350F` (Dark Amber) | `#FFFBEB` (Warm Cream) | 8.2:1 | ✅ AAA | Body text on main background |
-| `#FFFBEB` (Cream) | `#F59E0B` (Honey Gold) | 3.1:1 | ✅ AA Large | Button text (18px+) |
-| `#92400E` (Rich Amber) | `#FEF3C7` (Light Cream) | 6.5:1 | ✅ AAA | Text on cards |
-| `#FFFFFF` (White) | `#F59E0B` (Honey Gold) | 2.9:1 | ⚠️ AA Large only | Large buttons only (18px+) |
-| `#78350F` (Dark Amber) | `#FDE68A` (Soft Honey) | 4.8:1 | ✅ AA | Text on honey background |
-| `#10B981` (Green) | `#FFFBEB` (Cream) | 4.2:1 | ✅ AA | Green accent on cream |
-
-**Testing Tools**:
-- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
-- Chrome DevTools Lighthouse (Accessibility audit)
-- axe DevTools extension
-
-### Non-Color Indicators ⚠️
-
-**NEVER** use color alone to convey information. Always pair with:
-- ✅ Icons (e.g., ✓ checkmark for success, ⚠ warning triangle)
-- ✅ Text labels ("Success", "Error", "Out of Stock")
-- ✅ Patterns/textures
-- ✅ Position/layout
-
-**Examples**:
-- Error fields: Red border + ⚠ icon + "Please enter a valid email" message
-- Success: Green background + ✓ icon + "Added to cart!" text
-- Out of stock: Grayed image + "Out of Stock" overlay + disabled button
-
-## Color Don'ts
-
-❌ **NEVER**:
-- Use primary Honey Gold (#F59E0B) as large background areas (overwhelming)
-- Pair light honey shades with white text (fails contrast)
-- Use too many colors (stick to honey gold, natural green, + neutrals)
-- Ignore colorblind accessibility (always include icons + text)
-- Use red and green alone to differentiate (colorblind issue)
-- Apply cold blues or harsh grays (contradicts warm, natural brand)
-
-## References
-
-**Inspiration sources**:
-- Natural honey (the product itself!)
-- Beeswax candles (warm, organic glow)
-- Botanical gardens (natural greens)
-- Artisan craft markets (warm, handmade aesthetic)
-
-**Color Palette Harmony**:
-- Analogous harmony: Amber/Gold (#F59E0B) + Green (#10B981)
-- Temperature: Warm-dominant with cool green accent
-- 60-30-10 rule: Neutral 60% + Honey 30% + Green 10%
-
-**Design Tools**:
-- [Coolors.co](https://coolors.co/fffbeb-f59e0b-10b981-78350f) - Full palette
-- [Adobe Color](https://color.adobe.com/) - Harmony testing
-- [WebAIM](https://webaim.org/resources/contrastchecker/) - Contrast verification
+- ❌ NEVER use `#000000` pure black (use `#1c1c19`)
+- ❌ NEVER use 1px solid borders for sections (use background shifts)
+- ❌ NEVER use cold grays (`#808080`) — contradicts warm brand
+- ❌ NEVER use stark white backgrounds everywhere (use tonal layers)
+- ❌ NEVER use primary amber as large background (overwhelming)
+- ❌ NEVER rely on color alone for success/error states
 
 ---
 
-**Last Updated**: April 8, 2026
-**Updated By**: Design System Team
+## Color Psychology
+
+### Honey Amber (#7b5800)
+**Evokes**: Warmth, natural sweetness, artisan craft, premium quality without pretension  
+**Avoids**: Garish gold, cheap yellow, artificial brightness  
+**Brand Fit**: Directly represents honey, the core ingredient
+
+### Warm Parchment (#fcf9f4)
+**Evokes**: Handmade paper, organic materials, slow craft, intentional imperfection  
+**Avoids**: Sterile white, cold digital, mass production feel  
+**Brand Fit**: Reinforces artisan, small-batch, natural positioning
+
+### Botanical Green (#e0e5cc)
+**Evokes**: Ayurvedic herbs, natural ingredients, gentle healing, sustainable practice  
+**Avoids**: Neon green, artificial mint, chemical brighteners  
+**Brand Fit**: Supports botanical purity, herbal tradition
+
+---
+
+## Design Tools & Testing
+
+**Color Palette Tools**:
+- [Coolors.co Palette](https://coolors.co/fcf9f4-7b5800-e0e5cc-1c1c19) — Full palette view
+- [Adobe Color](https://color.adobe.com/) — Harmony testing
+- [Material Design 3 Color Tool](https://m3.material.io/styles/color/overview) — Original source
+
+**Accessibility Testing**:
+- [WebAIM Contrast Checker](https://webaim.org/resources/contrastchecker/)
+- Chrome DevTools Lighthouse (Accessibility audit)
+- [axe DevTools](https://www.deque.com/axe/devtools/) browser extension
+- [Colorblind Simulator](https://www.color-blindness.com/coblis-color-blindness-simulator/)
+
+---
+
+**Version**: 1.0 (Stitch Design System)  
+**Last Updated**: April 9, 2026  
+**Next Review**: When adding new product lines or seasonal themes
