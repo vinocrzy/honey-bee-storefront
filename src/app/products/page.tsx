@@ -1,94 +1,124 @@
-import Link from 'next/link';
-import { Button } from '@/components/ui/Button';
+/**
+ * Honey Bee — Shop Page (/products)
+ * Stitch "Luminous Alchemist" — editorial gallery layout
+ * Left: FilterSidebar | Right: Product grid
+ * Server Component with client filter shell
+ */
 
-export default function ProductsPage() {
-  // In a real app, this would fetch from API
-  const products = Array.from({ length: 12 }, (_, i) => ({
-    id: i + 1,
-    name: `Product ${i + 1}`,
-    price: 99.99 + i * 10,
-    description: 'High-quality product with excellent features',
-    image: null,
-  }));
+import type { Metadata } from 'next';
+import { Breadcrumb } from '@/components/ui/Breadcrumb';
+import { PageHero } from '@/components/ui/PageHero';
+import { ShopClientShell } from './ShopClientShell';
+
+export const metadata: Metadata = {
+  title: 'Shop All Soaps | Honey Bee Atelier',
+  description: 'Explore our full collection of cold-process artisan soaps. Handcrafted in small batches using organic botanicals and traditional Ayurvedic wisdom.',
+  openGraph: {
+    title: 'Shop All Soaps | Honey Bee Atelier',
+    description: 'Cold-process artisan soaps made with organic botanicals.',
+  },
+};
+
+// Static product data — replace with API call when backend is wired
+const PRODUCTS = [
+  {
+    id: 1,
+    slug: 'wildflower-honey-bar',
+    name: 'Wildflower & Honey Bar',
+    price: 22,
+    imageUrl: 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=800&auto=format&fit=crop',
+    fragrance: 'Floral · Sweet',
+    badge: 'Bestseller' as string | undefined,
+    tags: ['Sensitive Skin', 'Cold Process'],
+  },
+  {
+    id: 2,
+    slug: 'lavender-oat-cleanse',
+    name: 'Lavender & Oat Cleanse',
+    price: 19,
+    imageUrl: 'https://images.unsplash.com/photo-1607006479523-5d6fff45ddc7?w=800&auto=format&fit=crop',
+    fragrance: 'Floral · Herbal',
+    badge: undefined as string | undefined,
+    tags: ['Dry Skin', 'Sensitive'],
+  },
+  {
+    id: 3,
+    slug: 'charcoal-cedar-detox',
+    name: 'Charcoal & Cedar Detox',
+    price: 24,
+    imageUrl: 'https://images.unsplash.com/photo-1601612628452-9e99ced43524?w=800&auto=format&fit=crop',
+    fragrance: 'Woody · Earthy',
+    badge: 'New' as string | undefined,
+    tags: ['Oily Skin', 'Deep Cleanse'],
+  },
+  {
+    id: 4,
+    slug: 'rose-geranium-glow',
+    name: 'Rose Geranium Glow',
+    price: 21,
+    imageUrl: 'https://images.unsplash.com/photo-1612817288484-6f916006741a?w=800&auto=format&fit=crop',
+    fragrance: 'Floral · Citrus',
+    badge: undefined as string | undefined,
+    tags: ['Normal Skin', 'Brightening'],
+  },
+  {
+    id: 5,
+    slug: 'turmeric-neem-clarity',
+    name: 'Turmeric & Neem Clarity',
+    price: 23,
+    imageUrl: 'https://images.unsplash.com/photo-1578897367670-5f5a4e7fd03f?w=800&auto=format&fit=crop',
+    fragrance: 'Earthy · Herbal',
+    badge: undefined as string | undefined,
+    tags: ['Oily Skin', 'Ayurvedic'],
+  },
+  {
+    id: 6,
+    slug: 'shea-vanilla-dream',
+    name: 'Shea & Vanilla Dream',
+    price: 20,
+    imageUrl: 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=800&auto=format&fit=crop',
+    fragrance: 'Sweet · Warm',
+    badge: undefined as string | undefined,
+    tags: ['Dry Skin', 'Moisturising'],
+  },
+  {
+    id: 7,
+    slug: 'peppermint-eucalyptus-revival',
+    name: 'Peppermint Revival',
+    price: 21,
+    imageUrl: 'https://images.unsplash.com/photo-1607006479523-5d6fff45ddc7?w=800&auto=format&fit=crop',
+    fragrance: 'Citrus · Herbal',
+    badge: undefined as string | undefined,
+    tags: ['All Skin Types', 'Energising'],
+  },
+  {
+    id: 8,
+    slug: 'honey-oat-nourish',
+    name: 'Honey Oat Nourish',
+    price: 18,
+    imageUrl: 'https://images.unsplash.com/photo-1601612628452-9e99ced43524?w=800&auto=format&fit=crop',
+    fragrance: 'Sweet · Milky',
+    badge: undefined as string | undefined,
+    tags: ['Sensitive Skin', 'Baby-Safe'],
+  },
+];
+
+export default function ShopPage() {
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-          All Products
-        </h1>
-        <p className="text-muted-foreground">
-          Browse our complete collection of products
-        </p>
-      </div>
+    <main className="max-w-[1920px] mx-auto px-6 md:px-20 py-12">
+      {/* Breadcrumb */}
+      <Breadcrumb items={[{ label: 'Home', href: '/' }, { label: 'Shop All' }]} />
 
-      {/* Filters Section */}
-      <div className="mb-8 flex flex-col md:flex-row gap-4">
-        <input
-          type="search"
-          placeholder="Search products..."
-          className="flex-1 px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-        <select className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-          <option>All Categories</option>
-          <option>Electronics</option>
-          <option>Fashion</option>
-          <option>Home & Garden</option>
-          <option>Sports</option>
-        </select>
-        <select className="px-4 py-2 border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary">
-          <option>Sort by: Featured</option>
-          <option>Price: Low to High</option>
-          <option>Price: High to Low</option>
-          <option>Newest</option>
-        </select>
-      </div>
+      {/* Page Hero */}
+      <PageHero
+        title="The Soap"
+        titleItalic="Gallery"
+        description="Every bar is a slow meditation — cold-pressed, six-week cured, and infused with botanical intention."
+      />
 
-      {/* Products Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="border border-border rounded-lg overflow-hidden hover:shadow-lg transition-shadow"
-          >
-            <Link href={`/products/${product.id}`}>
-              <div className="aspect-square bg-muted flex items-center justify-center cursor-pointer hover:bg-muted/80 transition-colors">
-                <span className="text-muted-foreground">Product Image</span>
-              </div>
-            </Link>
-            <div className="p-4">
-              <Link href={`/products/${product.id}`}>
-                <h3 className="font-semibold text-lg mb-2 hover:text-primary transition-colors">
-                  {product.name}
-                </h3>
-              </Link>
-              <p className="text-muted-foreground text-sm mb-3">
-                {product.description}
-              </p>
-              <div className="flex items-center justify-between">
-                <span className="text-xl font-bold text-primary">
-                  ${product.price.toFixed(2)}
-                </span>
-                <Button size="sm">Add to Cart</Button>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      {/* Pagination */}
-      <div className="mt-12 flex justify-center gap-2">
-        <Button variant="outline" disabled>
-          Previous
-        </Button>
-        <Button variant="outline" className="bg-primary text-white">1</Button>
-        <Button variant="outline">2</Button>
-        <Button variant="outline">3</Button>
-        <Button variant="outline">
-          Next
-        </Button>
-      </div>
-    </div>
+      {/* Main layout: sidebar + grid */}
+      <ShopClientShell products={PRODUCTS} />
+    </main>
   );
 }
