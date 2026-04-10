@@ -14,7 +14,7 @@ const navLinks = [
   { href: '/products', label: 'Shop' },
   { href: '/collections', label: 'Collections' },
   { href: '/our-story', label: 'Our Story' },
-  { href: '/rituals', label: 'Rituals' },
+  { href: '/contact', label: 'Contact' },
 ];
 
 export function Header() {
