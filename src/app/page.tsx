@@ -15,15 +15,15 @@ const features = [
 ];
 
 const collections = [
-  { title: 'The Ritual Collection', subtitle: 'BESTSELLERS', image: '/images/collection-ritual.jpg', href: '/collections/ritual', span: 'col-span-2 row-span-2' },
-  { title: 'Botanical Series', subtitle: 'NEW ARRIVALS', image: '/images/collection-botanical.jpg', href: '/collections/botanical', span: 'col-span-1' },
-  { title: 'Therapeutic Range', subtitle: 'SENSITIVE SKIN', image: '/images/collection-therapeutic.jpg', href: '/collections/therapeutic', span: 'col-span-1' },
+  { title: 'The Ritual Collection', subtitle: 'BESTSELLERS', image: '/images/collection-ritual.webp', href: '/collections/ritual', span: 'col-span-2 row-span-2' },
+  { title: 'Botanical Series', subtitle: 'NEW ARRIVALS', image: '/images/collection-botanical.webp', href: '/collections/botanical', span: 'col-span-1' },
+  { title: 'Therapeutic Range', subtitle: 'SENSITIVE SKIN', image: '/images/collection-therapeutic.webp', href: '/collections/therapeutic', span: 'col-span-1' },
 ];
 
 const favorites = [
-  { name: 'Turmeric Glow Bar', fragrance: 'EARTHY · GOLDEN', price: '18', badge: 'BEST SELLER', image: '/images/product-turmeric.jpg', tags: ['Brightening', 'All Skin'] },
-  { name: 'Rose Petal Serenity', fragrance: 'FLORAL · SOFT', price: '22', badge: null, image: '/images/product-rose.jpg', tags: ['Sensitive', 'Hydrating'] },
-  { name: 'Neem & Charcoal Detox', fragrance: 'EARTHY · PURIFYING', price: '20', badge: 'LIMITED', image: '/images/product-neem.jpg', tags: ['Oily', 'Clarifying'] },
+  { name: 'Turmeric Glow Bar', fragrance: 'EARTHY · GOLDEN', price: '18', badge: 'BEST SELLER', image: '/images/product-turmeric.webp', tags: ['Brightening', 'All Skin'] },
+  { name: 'Rose Petal Serenity', fragrance: 'FLORAL · SOFT', price: '22', badge: null, image: '/images/product-rose.webp', tags: ['Sensitive', 'Hydrating'] },
+  { name: 'Neem & Charcoal Detox', fragrance: 'EARTHY · PURIFYING', price: '20', badge: 'LIMITED', image: '/images/product-neem.webp', tags: ['Oily', 'Clarifying'] },
 ];
 
 export default function HomePage() {
@@ -31,9 +31,15 @@ export default function HomePage() {
     <>
       {/* ── 1. HERO ───────────────────────────────────────────────────────── */}
       <section className="relative min-h-[850px] flex items-center px-6 md:px-20 overflow-hidden bg-[#fcf9f4]">
-        {/* Background image (replace with real asset) */}
+        {/* Background image */}
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[#f0ede8]" />
+          <Image
+            src="/images/hero-main.webp"
+            alt="Artisan handcrafted natural soap bars"
+            fill
+            className="object-cover"
+            priority
+          />
           <div className="absolute inset-0 hero-overlay" />
         </div>
 
@@ -93,6 +99,12 @@ export default function HomePage() {
               href={col.href}
               className={`group relative overflow-hidden rounded-xl bg-[#e5e2dd] min-h-[280px] flex flex-col justify-end p-6 ${col.span}`}
             >
+              <Image
+                src={col.image}
+                alt={col.title}
+                fill
+                className="object-cover group-hover:scale-105 transition-transform duration-700"
+              />
               <div className="absolute inset-0 bg-gradient-to-t from-[#1c1c19]/60 via-[#1c1c19]/10 to-transparent" />
               <div className="relative z-10">
                 <p className="label-caps text-[11px] text-white/70 mb-1">{col.subtitle}</p>
@@ -120,10 +132,13 @@ export default function HomePage() {
             <Link key={p.name} href={`/products/${p.name.toLowerCase().replace(/ /g, '-')}`} className="group">
               <div className="bg-white rounded-xl sunlight-shadow overflow-hidden">
                 {/* Product image */}
-                <div className="aspect-square bg-[#f0ede8] relative flex items-center justify-center">
-                  <span className="material-symbols-outlined text-6xl text-[#d3c5ae]" style={{ fontVariationSettings: "'wght' 100" }}>
-                    spa
-                  </span>
+                <div className="aspect-square bg-[#f0ede8] relative overflow-hidden">
+                  <Image
+                    src={p.image}
+                    alt={p.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  />
                   {p.badge && (
                     <span className={`absolute top-4 left-4 label-caps text-[9px] text-white rounded-full px-3 py-1 ${p.badge === 'LIMITED' ? 'bg-[#944925]' : 'honey-glow'}`}>
                       {p.badge}
@@ -156,11 +171,12 @@ export default function HomePage() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
           {/* Photo side */}
           <div className="relative aspect-[3/4] bg-[#e0e5cc] rounded-xl overflow-hidden">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <span className="material-symbols-outlined text-8xl text-[#c4c9b1]" style={{ fontVariationSettings: "'wght' 100" }}>
-                person
-              </span>
-            </div>
+            <Image
+              src="/images/founder.webp"
+              alt="Honey Bee founder, Registered Nurse and artisan soap maker"
+              fill
+              className="object-cover object-top"
+            />
             {/* Floating pull-quote card */}
             <div className="absolute bottom-8 right-[-24px] bg-white rounded-xl sunlight-shadow p-6 max-w-[220px]">
               <p className="font-headline text-sm italic text-[#1c1c19] leading-relaxed">

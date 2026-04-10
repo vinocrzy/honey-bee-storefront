@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
+import { defaultTheme } from "@/config/theme.config";
 
 /* ── Honey Bee typography: Noto Serif (headlines) + Manrope (body / labels) ── */
 const notoSerif = Noto_Serif({
@@ -36,8 +37,19 @@ export default function RootLayout({
       lang="en"
       className={`${notoSerif.variable} ${manrope.variable} h-full`}
     >
-      <body className="min-h-full flex flex-col bg-[#fcf9f4] text-[#1c1c19] antialiased">
-        <ThemeProvider>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+        />
+      </head>
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-[#fcf9f4] text-[#1c1c19] antialiased">
+        <ThemeProvider initialTheme={{
+          id: parseInt(process.env.NEXT_PUBLIC_STORE_ID || '1'),
+          storeName: process.env.NEXT_PUBLIC_STORE_NAME || 'Honey Bee Atelier',
+          domain: process.env.NEXT_PUBLIC_STORE_DOMAIN || null,
+          theme: defaultTheme,
+        }}>
           <Header />
           <main className="flex-1">
             {children}
