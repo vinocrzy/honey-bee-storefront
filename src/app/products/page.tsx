@@ -6,6 +6,7 @@
  */
 
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import { PageHero } from '@/components/ui/PageHero';
 import { ShopClientShell } from './ShopClientShell';
@@ -117,8 +118,30 @@ export default function ShopPage() {
         description="Every bar is a slow meditation — cold-pressed, six-week cured, and infused with botanical intention."
       />
 
-      {/* Main layout: sidebar + grid */}
-      <ShopClientShell products={PRODUCTS} />
+      {/* Main layout: sidebar + grid (now with API integration) */}
+      <Suspense fallback={
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-10 mt-12">
+          <div className="lg:col-span-1">
+            <div className="animate-pulse space-y-4">
+              <div className="h-8 bg-surface-container rounded" />
+              <div className="h-32 bg-surface-container rounded" />
+            </div>
+          </div>
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3, 4, 5, 6].map(i => (
+                <div key={i} className="animate-pulse">
+                  <div className="aspect-square bg-surface-container rounded-xl mb-4" />
+                  <div className="h-4 bg-surface-container rounded w-3/4 mb-2" />
+                  <div className="h-4 bg-surface-container rounded w-1/2" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      }>
+        <ShopClientShell />
+      </Suspense>
     </main>
   );
 }

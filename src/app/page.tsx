@@ -1,5 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
+import { getFeaturedProducts, getCategories } from '@/services/products';
+import type { Product, Category } from '@/types';
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Honey Bee — Homepage
@@ -14,19 +16,23 @@ const features = [
   { icon: 'verified', label: 'Skin-Safe', caption: 'No synthetic fragrance. No harsh surfactants' },
 ];
 
-const collections = [
-  { title: 'The Ritual Collection', subtitle: 'BESTSELLERS', image: '/images/collection-ritual.webp', href: '/collections/ritual', span: 'col-span-2 row-span-2' },
-  { title: 'Botanical Series', subtitle: 'NEW ARRIVALS', image: '/images/collection-botanical.webp', href: '/collections/botanical', span: 'col-span-1' },
-  { title: 'Therapeutic Range', subtitle: 'SENSITIVE SKIN', image: '/images/collection-therapeutic.webp', href: '/collections/therapeutic', span: 'col-span-1' },
-];
+export default async function HomePage() {
+  // Fetch real data from API
+  let favorites: Product[] = [];
+  let collections: Category[] = [];
+  let fetchError: string | null = null;
 
-const favorites = [
-  { name: 'Turmeric Glow Bar', fragrance: 'EARTHY · GOLDEN', price: '18', badge: 'BEST SELLER', image: '/images/product-turmeric.webp', tags: ['Brightening', 'All Skin'] },
-  { name: 'Rose Petal Serenity', fragrance: 'FLORAL · SOFT', price: '22', badge: null, image: '/images/product-rose.webp', tags: ['Sensitive', 'Hydrating'] },
-  { name: 'Neem & Charcoal Detox', fragrance: 'EARTHY · PURIFYING', price: '20', badge: 'LIMITED', image: '/images/product-neem.webp', tags: ['Oily', 'Clarifying'] },
-];
-
-export default function HomePage() {
+  try {
+    // Fetch featured products (top 3)
+    favorites = await getFeaturedProducts(3);
+    
+    // Fetch categories (top 3 for collections)
+    const allCategories = await getCategories();
+    collections = allCategories.slice(0, 3);
+  } catch (error) {
+    console.error('Failed to fetch homepage data:', error);
+    fetchError = 'Failed to load products. Please try again later.';
+  }
   return (
     <>
       {/* ── 1. HERO ───────────────────────────────────────────────────────── */}
@@ -92,27 +98,40 @@ export default function HomePage() {
           <p className="label-caps text-[#4f4634] mb-2">Our Heritage</p>
           <h2 className="font-headline text-4xl text-[#1c1c19] tracking-tight">The Collections</h2>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {collections.map((col) => (
-            <Link
-              key={col.title}
-              href={col.href}
-              className={`group relative overflow-hidden rounded-xl bg-[#e5e2dd] min-h-[280px] flex flex-col justify-end p-6 ${col.span}`}
-            >
-              <Image
-                src={col.image}
-                alt={col.title}
-                fill
-                className="object-cover group-hover:scale-105 transition-transform duration-700"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#1c1c19]/60 via-[#1c1c19]/10 to-transparent" />
-              <div className="relative z-10">
-                <p className="label-caps text-[11px] text-white/70 mb-1">{col.subtitle}</p>
-                <h3 className="font-headline text-2xl text-white tracking-tight group-hover:underline">{col.title}</h3>
-              </div>
-            </Link>
-          ))}
-        </div>
+        
+        {fetchError && collections.length === 0 ? (
+          <div className="text-center py-12 text-[#4f4634]">
+            <p>{fetchError}</p>
+          </div>
+        ) : collections.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {collections.map((col, index) => (
+              <Link
+                key={col.id}
+                href={`/products?category=${col.slug}`}
+                className={`group relative overflow-hidden rounded-xl bg-[#e5e2dd] min-h-[280px] flex flex-col justify-end p-6 ${
+                  index === 0 ? 'col-span-2 row-span-2' : 'col-span-1'
+                }`}
+              >
+                {col.image_url && (
+                  <Image
+                    src={col.image_url}
+                    alt={col.name}
+                    fill
+                    className="object-cover group-hover:scale-105 transition-transform duration-700"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1c1c19]/60 via-[#1c1c19]/10 to-transparent" />
+                <div className="relative z-10">
+                  <p className="label-caps text-[11px] text-white/70 mb-1">
+                    {index === 0 ? 'BESTSELLERS' : index === 1 ? 'NEW ARRIVALS' : 'FEATURED'}
+                  </p>
+                  <h3 className="font-headline text-2xl text-white tracking-tight group-hover:underline">{col.name}</h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) :null}
       </section>
 
       {/* ── 4. CURRENT FAVORITES ──────────────────────────────────────────── */}
@@ -127,43 +146,56 @@ export default function HomePage() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {favorites.map((p) => (
-            <Link key={p.name} href={`/products/${p.name.toLowerCase().replace(/ /g, '-')}`} className="group">
-              <div className="bg-white rounded-xl sunlight-shadow overflow-hidden">
-                {/* Product image */}
-                <div className="aspect-square bg-[#f0ede8] relative overflow-hidden">
-                  <Image
-                    src={p.image}
-                    alt={p.name}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  {p.badge && (
-                    <span className={`absolute top-4 left-4 label-caps text-[9px] text-white rounded-full px-3 py-1 ${p.badge === 'LIMITED' ? 'bg-[#944925]' : 'honey-glow'}`}>
-                      {p.badge}
-                    </span>
-                  )}
-                </div>
-                {/* Card body */}
-                <div className="p-5">
-                  <div className="flex justify-between items-baseline mb-1">
-                    <h3 className="font-headline text-lg text-[#1c1c19] group-hover:text-[#7b5800] transition-colors">{p.name}</h3>
-                    <span className="font-body font-semibold text-[#7b5800]">${p.price}</span>
-                  </div>
-                  <p className="label-caps text-[10px] text-[#4f4634] mb-3">{p.fragrance}</p>
-                  <div className="flex gap-2 flex-wrap">
-                    {p.tags.map((tag) => (
-                      <span key={tag} className="rounded-full bg-[#f0ede8] label-caps text-[9px] text-[#4f4634] px-3 py-1">
-                        {tag}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
+        {fetchError && favorites.length === 0 ? (
+          <div className="text-center py-12 text-[#4f4634]">
+            <p>{fetchError}</p>
+            <Link href="/products" className="honey-glow inline-block text-white label-caps text-[11px] rounded-xl px-8 py-4 mt-6 hover:opacity-90 transition-opacity">
+              Browse All Products
             </Link>
-          ))}
-        </div>
+          </div>
+        ) : favorites.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            {favorites.map((p) => (
+              <Link key={p.id} href={`/products/${p.slug}`} className="group">
+                <div className="bg-white rounded-xl sunlight-shadow overflow-hidden">
+                  {/* Product image */}
+                  <div className="aspect-square bg-[#f0ede8] relative overflow-hidden">
+                    <Image
+                      src={p.primary_image?.url || p.images?.[0]?.url || '/images/placeholder-product.webp'}
+                      alt={p.primary_image?.alt_text || p.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {p.is_featured && (
+                      <span className="absolute top-4 left-4 label-caps text-[9px] text-white rounded-full px-3 py-1 honey-glow">
+                        BEST SELLER
+                      </span>
+                    )}
+                  </div>
+                  {/* Card body */}
+                  <div className="p-5">
+                    <div className="flex justify-between items-baseline mb-1">
+                      <h3 className="font-headline text-lg text-[#1c1c19] group-hover:text-[#7b5800] transition-colors">{p.name}</h3>
+                      <span className="font-body font-semibold text-[#7b5800]">${p.price.toFixed(2)}</span>
+                    </div>
+                    {p.short_description && (
+                      <p className="label-caps text-[10px] text-[#4f4634] mb-3 line-clamp-1">{p.short_description}</p>
+                    )}
+                    {p.categories && p.categories.length > 0 && (
+                      <div className="flex gap-2 flex-wrap">
+                        {p.categories.slice(0, 2).map((cat) => (
+                          <span key={cat.id} className="rounded-full bg-[#f0ede8] label-caps text-[9px] text-[#4f4634] px-3 py-1">
+                            {cat.name}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        ) : null}
       </section>
 
       {/* ── 5. STORY TEASER ───────────────────────────────────────────────── */}

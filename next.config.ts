@@ -2,7 +2,8 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   // Enable static site generation (SSG)
-  output: 'export',
+  // Disabled for MVP development with API integration - will be re-enabled with ISR strategy
+  // output: 'export',
   
   // Disable image optimization for static export
   images: {

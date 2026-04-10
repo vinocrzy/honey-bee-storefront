@@ -1,65 +1,74 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { NursePromiseBand } from '@/components/ui/NursePromiseBand';
-
-interface CartItem {
-  id: number;
-  slug: string;
-  name: string;
-  price: number;
-  quantity: number;
-  imageUrl: string;
-  fragrance?: string;
-}
-
-const INITIAL_CART: CartItem[] = [
-  {
-    id: 1,
-    slug: 'wildflower-honey-bar',
-    name: 'Wildflower & Honey Bar',
-    price: 22,
-    quantity: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=400&auto=format&fit=crop',
-    fragrance: 'Floral · Sweet',
-  },
-  {
-    id: 2,
-    slug: 'lavender-oat-cleanse',
-    name: 'Lavender & Oat Cleanse',
-    price: 19,
-    quantity: 1,
-    imageUrl: 'https://images.unsplash.com/photo-1607006479523-5d6fff45ddc7?w=400&auto=format&fit=crop',
-    fragrance: 'Floral · Herbal',
-  },
-];
+import { useCart } from '@/contexts/CartContext';
 
 const FREE_SHIPPING_THRESHOLD = 75;
 
 export default function CartPage() {
-  const [items, setItems] = useState<CartItem[]>(INITIAL_CART);
-  const [promoCode, setPromoCode] = useState('');
-  const [promoApplied, setPromoApplied] = useState(false);
+  const { cart, isLoading, error, updateQuantity, removeFromCart } = useCart();
 
-  const updateQty = (id: number, qty: number) => {
-    if (qty < 1) return removeItem(id);
-    setItems(prev => prev.map(item => item.id === id ? { ...item, quantity: qty } : item));
+  const updateQty = async (itemId: number, qty: number) => {
+    if (qty < 1) return removeItem(itemId);
+    try {
+      await updateQuantity(itemId, qty);
+    } catch (err) {
+      console.error('Failed to update quantity:', err);
+    }
   };
 
-  const removeItem = (id: number) => {
-    setItems(prev => prev.filter(item => item.id !== id));
+  const removeItem = async (itemId: number) => {
+    try {
+      await removeFromCart(itemId);
+    } catch (err) {
+      console.error('Failed to remove item:', err);
+    }
   };
 
-  const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
-  const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 9.95;
-  const discount = promoApplied ? subtotal * 0.1 : 0;
-  const total = subtotal + shipping - discount;
+  const items = cart?.items || [];
+  const subtotal = cart?.subtotal || 0;
+  const shipping = cart?.shipping || (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 9.95);
+  const tax = cart?.tax || 0;
+  const total = cart?.total || (subtotal + shipping + tax);
   const toFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
 
   const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+
+  // Loading state
+  if (isLoading && !cart) {
+    return (
+      <main className="max-w-[1920px] mx-auto px-6 md:px-20 py-24">
+        <div className="space-y-6 animate-pulse">
+          <div className="h-12 bg-surface-container rounded w-64" />
+          <div className="h-32 bg-surface-container rounded" />
+          <div className="h-32 bg-surface-container rounded" />
+        </div>
+      </main>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <main className="max-w-[1920px] mx-auto px-6 md:px-20 py-24 text-center space-y-6">
+        <span className="material-symbols-outlined text-error mx-auto block" style={{ fontSize: '64px', fontVariationSettings: "'wght' 100" }}>
+          error
+        </span>
+        <h1 className="font-headline text-4xl text-[#1c1c19]">Error Loading Cart</h1>
+        <p className="text-on-surface-variant text-lg">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="honey-glow inline-block text-white font-label font-bold uppercase tracking-widest text-sm px-10 py-5 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity"
+        >
+          Retry
+        </button>
+      </main>
+    );
+  }
 
   if (items.length === 0) {
     return (
@@ -122,10 +131,10 @@ export default function CartPage() {
             {items.map(item => (
               <div key={item.id} className="bg-surface-container-lowest rounded-xl sunlight-shadow p-5 flex gap-5">
                 {/* Image */}
-                <Link href={`/products/${item.slug}`} className="flex-shrink-0 w-24 h-28 rounded-xl overflow-hidden">
+                <Link href={`/products/${item.product_slug}`} className="flex-shrink-0 w-24 h-28 rounded-xl overflow-hidden">
                   <Image
-                    src={item.imageUrl}
-                    alt={item.name}
+                    src={item.product_image || 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=400&auto=format&fit=crop'}
+                    alt={item.product_name}
                     width={96}
                     height={112}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
@@ -134,18 +143,19 @@ export default function CartPage() {
 
                 {/* Info */}
                 <div className="flex-1 min-w-0">
-                  <Link href={`/products/${item.slug}`}>
-                    <h3 className="font-headline text-lg text-[#1c1c19] hover:text-primary transition-colors leading-tight">{item.name}</h3>
+                  <Link href={`/products/${item.product_slug}`}>
+                    <h3 className="font-headline text-lg text-[#1c1c19] hover:text-primary transition-colors leading-tight">{item.product_name}</h3>
                   </Link>
-                  {item.fragrance && <p className="label-caps text-on-surface-variant mt-1">{item.fragrance}</p>}
-                  <p className="font-semibold text-primary mt-2">{fmt(item.price)}</p>
+                  <p className="label-caps text-on-surface-variant mt-1">SKU: {item.product_sku}</p>
+                  <p className="font-semibold text-primary mt-2">{fmt(item.unit_price)}</p>
                 </div>
 
                 {/* Qty + Remove */}
                 <div className="flex flex-col items-end justify-between">
                   <button
                     onClick={() => removeItem(item.id)}
-                    className="text-on-surface-variant hover:text-error transition-colors"
+                    disabled={isLoading}
+                    className="text-on-surface-variant hover:text-error transition-colors disabled:opacity-50"
                     aria-label="Remove item"
                   >
                     <span className="material-symbols-outlined" style={{ fontSize: '20px', fontVariationSettings: "'wght' 200" }}>close</span>
@@ -154,7 +164,8 @@ export default function CartPage() {
                   <div className="flex items-center border border-outline-variant rounded-xl overflow-hidden">
                     <button
                       onClick={() => updateQty(item.id, item.quantity - 1)}
-                      className="px-3 py-2 text-primary hover:bg-surface-container transition-colors"
+                      disabled={isLoading}
+                      className="px-3 py-2 text-primary hover:bg-surface-container transition-colors disabled:opacity-50"
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'wght' 300" }}>remove</span>
                     </button>
@@ -163,12 +174,13 @@ export default function CartPage() {
                     </span>
                     <button
                       onClick={() => updateQty(item.id, item.quantity + 1)}
-                      className="px-3 py-2 text-primary hover:bg-surface-container transition-colors"
+                      disabled={isLoading}
+                      className="px-3 py-2 text-primary hover:bg-surface-container transition-colors disabled:opacity-50"
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'wght' 300" }}>add</span>
                     </button>
                   </div>
-                  <p className="font-semibold text-sm text-[#1c1c19]">{fmt(item.price * item.quantity)}</p>
+                  <p className="font-semibold text-sm text-[#1c1c19]">{fmt(item.total_price)}</p>
                 </div>
               </div>
             ))}
@@ -188,40 +200,33 @@ export default function CartPage() {
             <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-5 sticky top-32">
               <h2 className="font-headline text-2xl text-[#1c1c19]">Order Summary</h2>
 
-              {/* Promo Code */}
-              <div className="space-y-2">
+              {/* Promo Code - Coming Soon */}
+              {/* <div className="space-y-2">
                 <label className="label-caps text-on-surface-variant">Promo Code</label>
                 <div className="flex gap-2">
                   <input
                     type="text"
-                    value={promoCode}
-                    onChange={e => setPromoCode(e.target.value)}
-                    placeholder="HONEYBEE10"
-                    className="flex-1 bg-surface-container border border-outline-variant rounded-xl px-4 py-2.5 text-sm text-[#1c1c19] focus:outline-none focus:border-primary transition-colors"
+                    placeholder="Coming soon..."
+                    disabled
+                    className="flex-1 bg-surface-container border border-outline-variant rounded-xl px-4 py-2.5 text-sm text-on-surface-variant/50 cursor-not-allowed"
                   />
                   <button
-                    onClick={() => { if (promoCode.trim()) setPromoApplied(true); }}
-                    className="px-4 py-2.5 border border-primary text-primary font-label text-xs uppercase tracking-widest rounded-xl hover:bg-primary hover:text-white transition-all"
+                    disabled
+                    className="px-4 py-2.5 border border-outline-variant text-on-surface-variant/50 font-label text-xs uppercase tracking-widest rounded-xl cursor-not-allowed"
                   >
                     Apply
                   </button>
                 </div>
-                {promoApplied && (
-                  <p className="text-xs text-secondary flex items-center gap-1">
-                    <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>check</span>
-                    10% discount applied
-                  </p>
-                )}
-              </div>
+              </div> */}
 
               {/* Totals */}
               <div className="space-y-3 pt-3 border-t border-outline-variant text-sm">
                 <div className="flex justify-between text-on-surface-variant">
                   <span>Subtotal</span><span>{fmt(subtotal)}</span>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-secondary">
-                    <span>Promo (10%)</span><span>−{fmt(discount)}</span>
+                {tax > 0 && (
+                  <div className="flex justify-between text-on-surface-variant">
+                    <span>Tax</span><span>{fmt(tax)}</span>
                   </div>
                 )}
                 <div className="flex justify-between text-on-surface-variant">

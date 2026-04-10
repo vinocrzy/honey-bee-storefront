@@ -9,6 +9,7 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
+import { useCart } from '@/contexts/CartContext';
 
 const navLinks = [
   { href: '/products', label: 'Shop' },
@@ -20,6 +21,7 @@ const navLinks = [
 export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
+  const { itemCount } = useCart();
 
   return (
     <header className="botanical-glass sticky top-0 z-50 w-full">
@@ -82,9 +84,11 @@ export function Header() {
           >
             <span className="material-symbols-outlined" style={{ fontVariationSettings: "'wght' 200" }}>
               shopping_bag
-            </span>
-            <span className="absolute -top-1.5 -right-1.5 honey-glow text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-label">
-              0
+            {itemCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 honey-glow text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-label">
+                {itemCount}
+              </span>
+            )}
             </span>
           </Link>
 

@@ -22,7 +22,7 @@ export const getProducts = async (filters?: ProductFilters): Promise<PaginatedRe
   if (filters?.page) params.append('page', filters.page.toString());
   if (filters?.per_page) params.append('per_page', filters.per_page.toString());
   
-  const response = await apiClient.get<PaginatedResponse<Product>>(`/products?${params.toString()}`);
+  const response = await apiClient.get<PaginatedResponse<Product>>(`/public/products?${params.toString()}`);
   return response.data;
 };
 
@@ -43,7 +43,7 @@ export const getFeaturedProducts = async (limit: number = 10): Promise<Product[]
  * Get single product by slug
  */
 export const getProductBySlug = async (slug: string): Promise<Product> => {
-  const response = await apiClient.get<ApiResponse<Product>>(`/products/${slug}`);
+  const response = await apiClient.get<ApiResponse<Product>>(`/public/products/${slug}`);
   return response.data.data;
 };
 
@@ -51,7 +51,7 @@ export const getProductBySlug = async (slug: string): Promise<Product> => {
  * Get single product by ID
  */
 export const getProductById = async (id: number): Promise<Product> => {
-  const response = await apiClient.get<ApiResponse<Product>>(`/products/${id}`);
+  const response = await apiClient.get<ApiResponse<Product>>(`/public/products/${id}`);
   return response.data.data;
 };
 
@@ -59,7 +59,9 @@ export const getProductById = async (id: number): Promise<Product> => {
  * Get related products (products in same category)
  */
 export const getRelatedProducts = async (productId: number, limit: number = 4): Promise<Product[]> => {
-  const response = await apiClient.get<PaginatedResponse<Product>>(`/products/${productId}/related?per_page=${limit}`);
+  // Note: Related products endpoint not yet implemented in backend Phase 8.1
+  // Fallback to fetching from same category for MVP
+  const response = await apiClient.get<PaginatedResponse<Product>>(`/public/products?per_page=${limit}`);
   return response.data.data;
 };
 
@@ -78,7 +80,7 @@ export const searchProducts = async (query: string, page: number = 1, perPage: n
  * Get all categories
  */
 export const getCategories = async (): Promise<Category[]> => {
-  const response = await apiClient.get<ApiResponse<Category[]>>('/categories');
+  const response = await apiClient.get<ApiResponse<Category[]>>('/public/categories');
   return response.data.data;
 };
 
@@ -86,7 +88,7 @@ export const getCategories = async (): Promise<Category[]> => {
  * Get category by slug with products
  */
 export const getCategoryBySlug = async (slug: string): Promise<Category> => {
-  const response = await apiClient.get<ApiResponse<Category>>(`/categories/${slug}`);
+  const response = await apiClient.get<ApiResponse<Category>>(`/public/categories/${slug}`);
   return response.data.data;
 };
 

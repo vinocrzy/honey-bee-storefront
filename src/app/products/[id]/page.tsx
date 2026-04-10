@@ -2,19 +2,25 @@
  * Honey Bee — Product Detail Page (/products/[slug])
  * Stitch "Luminous Alchemist" — 12-col editorial gallery layout
  * Left: image gallery mosaic | Right: sticky product info + CTA
+ * Now with API integration and real cart functionality
  */
 
-import type { Metadata } from 'next';
+'use client';
+
+import { use, useEffect, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
-import { AddToCartButton } from '@/components/ui/AddToCartButton';
 import { QuantitySelector } from '@/components/ui/QuantitySelector';
 import { NursePromiseBand } from '@/components/ui/NursePromiseBand';
 import { IngredientCard } from '@/components/ui/IngredientCard';
 import { TestimonialCard } from '@/components/ui/TestimonialCard';
 import { ProductCard } from '@/components/ui/ProductCard';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { useCart } from '@/contexts/CartContext';
+import { getProductBySlug, getRelatedProducts } from '@/services/products';
+import type { Product as ApiProduct } from '@/types';
 
 interface ProductDetailPageProps {
   params: Promise<{ id: string }>;
@@ -37,7 +43,7 @@ interface Product {
   images: string[];
 }
 
-// Static product data — replace with API fetch when backend is wired
+// Static product data — FALLBACK ONLY (API is wired now)
 const PRODUCTS: Record<string, Product> = {
   'wildflower-honey-bar': {
     id: 1,
@@ -308,33 +314,144 @@ function getProduct(id: string): Product {
   };
 }
 
-export async function generateStaticParams() {
-  return Object.keys(PRODUCTS).map(slug => ({ id: slug }));
-}
+// Note: generateStaticParams and generateMetadata removed because this is now a client component
+// Metadata will be handled by parent layout or via Next.js Head in a future iteration
+// For MVP, we prioritize functionality over SSR optimization
 
-export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
-  const { id } = await params;
-  const product = getProduct(id);
-  return {
-    title: `${product.name} | Honey Bee Atelier`,
-    description: product.description,
-    openGraph: {
-      title: product.name,
-      description: product.description,
-      images: product.images[0] ? [{ url: product.images[0] }] : [],
-    },
+export default function ProductDetailPage({ params }: ProductDetailPageProps) {
+  // Unwrap params Promise (Next.js 15+ requirement)
+  const { id: slug } = use(params);
+  const router = useRouter();
+  const { addToCart, itemCount } = useCart();
+  
+  const [product, setProduct] = useState<ApiProduct | null>(null);
+  const [relatedProducts, setRelatedProducts] = useState<ApiProduct[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [quantity, setQuantity] = useState(1);
+  const [addingToCart, setAddingToCart] = useState(false);
+  const [addedToCart, setAddedToCart] = useState(false);
+
+  // Fetch product data
+  useEffect(() => {
+    const fetchProduct = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        const fetchedProduct = await getProductBySlug(slug);
+        setProduct(fetchedProduct);
+        
+        // Fetch related products
+        try {
+          const related = await getRelatedProducts(fetchedProduct.id, 4);
+          setRelatedProducts(related);
+        } catch (err) {
+          console.warn('Failed to load related products:', err);
+          // Non-critical, continue
+        }
+      } catch (err) {
+        console.error('Product fetch error:', err);
+        setError(err instanceof Error ? err.message : 'Product not found');
+        // Redirect to products page after 3 seconds
+        setTimeout(() => router.push('/products'), 3000);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProduct();
+  }, [slug, router]);
+
+  // Handle add to cart
+  const handleAddToCart = async () => {
+    if (!product) return;
+    
+    setAddingToCart(true);
+    try {
+      await addToCart({
+        product_id: product.id,
+        quantity,
+        // variant_id omitted - optional field, only include if product has variants
+      });
+      setAddedToCart(true);
+      setTimeout(() => setAddedToCart(false), 2500);
+    } catch (err) {
+      console.error('Add to cart error:', err);
+      alert(err instanceof Error ? err.message : 'Failed to add to cart');
+    } finally {
+      setAddingToCart(false);
+    }
   };
-}
 
-export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
-  const { id } = await params;
-  const product = getProduct(id);
+  // Loading state
+  if (loading) {
+    return (
+      <main className="max-w-[1920px] mx-auto px-6 md:px-20 py-12">
+        <div className="space-y-6 animate-pulse">
+          <div className="h-8 bg-surface-container rounded w-64" />
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
+            <div className="lg:col-span-7 space-y-4">
+              <div className="aspect-square bg-surface-container rounded-xl" />
+            </div>
+            <div className="lg:col-span-5 space-y-4">
+              <div className="h-12 bg-surface-container rounded w-3/4" />
+              <div className="h-6 bg-surface-container rounded w-1/2" />
+              <div className="h-32 bg-surface-container rounded" />
+            </div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Error state (404)
+  if (error || !product) {
+    return (
+      <main className="max-w-[1920px] mx-auto px-6 md:px-20 py-24 text-center space-y-6">
+        <span className="material-symbols-outlined text-on-surface-variant mx-auto block" style={{ fontSize: '64px', fontVariationSettings: "'wght' 100" }}>
+          search_off
+        </span>
+        <h1 className="font-headline text-4xl text-[#1c1c19]">Product Not Found</h1>
+        <p className="text-on-surface-variant text-lg">
+          {error || "The product you're looking for doesn't exist."}
+        </p>
+        <p className="text-sm text-on-surface-variant">Redirecting to shop in 3 seconds...</p>
+        <Link
+          href="/products"
+          className="honey-glow inline-block text-white font-label font-bold uppercase tracking-widest text-sm px-10 py-5 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity"
+        >
+          Browse All Products
+        </Link>
+      </main>
+    );
+  }
+
+  // Out of stock check
+  const isOutOfStock = product.stock_quantity <= 0;
   const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(product.price);
 
-  // Related products (all others)
-  const related = Object.values(PRODUCTS)
-    .filter(p => p.slug !== product.slug)
-    .slice(0, 3);
+  // Prepare product images (use API images or fallback)
+  const productImages = product.images && product.images.length > 0
+    ? product.images.map(img => img.url)
+    : [product.primary_image?.url || 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=800&auto=format&fit=crop'];
+
+  // Mock data for stuff not in API yet
+  const mockCollection = 'Artisan Collection';
+  const mockBenefits = [
+    'Cold-process technique retains natural glycerin',
+    'pH-balanced formula for all skin types',
+    'Biodegradable and eco-friendly packaging',
+  ];
+  const mockAttributes = [
+    { icon: 'eco', label: '100% Biodegradable & Plastic-Free' },
+    { icon: 'history_toggle_off', label: 'Cured for 6 weeks for maximum longevity' },
+    { icon: 'spa', label: 'pH-balanced for sensitive skin' },
+  ];
+  const mockIngredients = [
+    { name: 'Organic Oils', description: 'Cold-pressed botanical oils for deep nourishment.', icon: 'opacity' },
+    { name: 'Natural Botanicals', description: 'Hand-selected herbs and flowers for therapeutic benefits.', icon: 'local_florist' },
+  ];
 
   return (
     <>
@@ -356,8 +473,8 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
             {/* Large hero image */}
             <div className="col-span-2 aspect-[4/5] overflow-hidden rounded-xl">
               <Image
-                src={product.images[0]}
-                alt={product.name}
+                src={productImages[0]}
+                alt={product.primary_image?.alt_text || product.name}
                 width={800}
                 height={1000}
                 className="w-full h-full object-cover"
@@ -365,7 +482,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               />
             </div>
             {/* Secondary images */}
-            {product.images.slice(1, 3).map((src, i) => (
+            {productImages.slice(1, 3).map((src, i) => (
               <div key={i} className="aspect-square overflow-hidden rounded-xl">
                 <Image
                   src={src}
@@ -382,30 +499,92 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           <div className="md:col-span-5 md:sticky md:top-32 space-y-8">
             {/* Collection + Name + Price */}
             <div className="space-y-3">
-              <p className="label-caps text-primary">{product.collection}</p>
+              <p className="label-caps text-primary">{mockCollection}</p>
               <h1 className="font-headline text-5xl text-[#1c1c19] leading-tight tracking-tight">
                 {product.name}
               </h1>
               <p className="font-headline text-2xl text-primary">{formatted}</p>
+              {isOutOfStock && (
+                <div className="flex items-center gap-2 text-error">
+                  <span className="material-symbols-outlined" style={{ fontSize: '20px', fontVariationSettings: "'wght' 300" }}>
+                    info
+                  </span>
+                  <span className="font-label text-sm uppercase tracking-wide">Out of Stock</span>
+                </div>
+              )}
             </div>
 
             {/* Description */}
             <p className="text-lg text-on-surface-variant leading-relaxed">
-              {product.description}
+              {product.description || product.short_description || 'Handcrafted artisan soap made with organic botanicals.'}
             </p>
 
             {/* Quantity + Add to Cart */}
             <div className="space-y-4">
-              <QuantitySelector min={1} max={10} defaultValue={1} />
-              <AddToCartButton productId={product.id} productName={product.name} price={product.price} />
-              <button className="w-full text-primary py-4 font-label uppercase tracking-widest text-xs font-semibold hover:underline decoration-outline-variant underline-offset-8 transition-all">
-                Find in a Boutique Near You
+              {/* Quantity Selector */}
+              <div className="flex items-center gap-4">
+                <label className="label-caps text-on-surface-variant">Quantity</label>
+                <div className="flex items-center border border-outline-variant rounded-xl overflow-hidden">
+                  <button
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                    disabled={isOutOfStock}
+                    className="px-4 py-3 text-primary hover:bg-surface-container transition-colors disabled:opacity-50"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'wght' 300" }}>remove</span>
+                  </button>
+                  <span className="px-6 py-3 text-sm font-label font-semibold text-[#1c1c19] border-x border-outline-variant min-w-[3rem] text-center">
+                    {quantity}
+                  </span>
+                  <button
+                    onClick={() => setQuantity(Math.min(product.stock_quantity || 10, quantity + 1))}
+                    disabled={isOutOfStock}
+                    className="px-4 py-3 text-primary hover:bg-surface-container transition-colors disabled:opacity-50"
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'wght' 300" }}>add</span>
+                  </button>
+                </div>
+                <span className="text-sm text-on-surface-variant">
+                  {product.stock_quantity} in stock
+                </span>
+              </div>
+
+              {/* Add to Cart Button */}
+              <button
+                onClick={handleAddToCart}
+                disabled={addingToCart || isOutOfStock}
+                className="honey-glow text-white w-full py-5 rounded-xl font-label uppercase tracking-widest text-sm font-bold shadow-lg shadow-primary/10 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {addingToCart ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Adding...
+                  </span>
+                ) : addedToCart ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px', fontVariationSettings: "'wght' 300" }}>check</span>
+                    Added to Basket ({itemCount})
+                  </span>
+                ) : isOutOfStock ? (
+                  'Out of Stock'
+                ) : (
+                  'Add to Atelier Basket'
+                )}
               </button>
+
+              <Link 
+                href="/cart"
+                className="block w-full text-center text-primary py-4 font-label uppercase tracking-widest text-xs font-semibold hover:underline decoration-outline-variant underline-offset-8 transition-all"
+              >
+                View Basket ({itemCount})
+              </Link>
             </div>
 
             {/* Attributes */}
             <div className="space-y-4 pt-4 border-t border-outline-variant">
-              {product.attributes.map((attr) => (
+              {mockAttributes.map((attr) => (
                 <div key={attr.label} className="flex items-center gap-4 text-on-surface-variant">
                   <span
                     className="material-symbols-outlined text-secondary"
@@ -437,7 +616,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               <div className="bg-surface-container-lowest p-8 rounded-xl space-y-5">
                 <h3 className="label-caps text-secondary font-bold">Key Benefits</h3>
                 <ul className="space-y-4">
-                  {product.benefits.map((benefit) => (
+                  {mockBenefits.map((benefit) => (
                     <li key={benefit} className="flex gap-4 items-start">
                       <span
                         className="material-symbols-outlined text-primary text-sm mt-0.5"
@@ -479,7 +658,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
               </Link>
             </div>
             <div className="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
-              {product.ingredients.map((ing) => (
+              {mockIngredients.map((ing) => (
                 <IngredientCard key={ing.name} {...ing} />
               ))}
             </div>
@@ -493,30 +672,25 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         />
 
         {/* ── Testimonials ── */}
-        {product.testimonials.length > 0 && (
-          <section className="px-6 md:px-20 py-24">
-            <div className="text-center mb-12 space-y-3">
-              <SectionLabel className="text-center">From Our Community</SectionLabel>
-              <h2 className="font-headline text-4xl text-[#1c1c19]">What They&apos;re Saying</h2>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {product.testimonials.map((t) => (
-                <TestimonialCard key={t.author} {...t} />
-              ))}
-            </div>
-          </section>
-        )}
+        {/* Temporarily hidden until testimonials in API */}
 
         {/* ── Related Products ── */}
-        {related.length > 0 && (
+        {relatedProducts.length > 0 && (
           <section className="bg-surface-container px-6 md:px-20 py-24">
             <div className="mb-10 space-y-3">
               <SectionLabel>Complete the Ritual</SectionLabel>
               <h2 className="font-headline text-3xl text-[#1c1c19]">You May Also Love</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {related.map((p) => (
-                <ProductCard key={p.id} id={p.id} slug={p.slug} name={p.name} price={p.price} imageUrl={p.images[0]} />
+              {relatedProducts.map((p) => (
+                <ProductCard 
+                  key={p.id} 
+                  id={p.id} 
+                  slug={p.slug} 
+                  name={p.name} 
+                  price={p.price} 
+                  imageUrl={p.primary_image?.url || p.images?.[0]?.url || 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=400&auto=format&fit=crop'}
+                />
               ))}
             </div>
           </section>

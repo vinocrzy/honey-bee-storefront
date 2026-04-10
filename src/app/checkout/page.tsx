@@ -3,65 +3,196 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { useCart } from '@/contexts/CartContext';
+import { guestCheckout, type GuestCheckoutRequest } from '@/services/checkout';
+import { formatPhoneToE164, validatePhoneE164, formatPhoneInput } from '@/lib/phoneUtils';
 
 interface FormData {
-  email: string;
-  firstName: string;
-  lastName: string;
-  address: string;
-  city: string;
-  state: string;
-  postcode: string;
-  country: string;
-  cardName: string;
-  cardNumber: string;
-  cardExpiry: string;
-  cardCvc: string;
+  customerName: string;
+  customerEmail: string;
+  customerPhone: string;
+  shippingFirstName: string;
+  shippingLastName: string;
+  shippingAddress1: string;
+  shippingAddress2: string;
+  shippingCity: string;
+  shippingState: string;
+  shippingPostalCode: string;
+  shippingCountry: string;
+  shippingPhone: string;
   notes: string;
 }
 
-const ORDER_ITEMS = [
-  { id: 1, name: 'Wildflower & Honey Bar', price: 22, quantity: 2, imageUrl: 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=200&auto=format&fit=crop' },
-  { id: 2, name: 'Lavender & Oat Cleanse', price: 19, quantity: 1, imageUrl: 'https://images.unsplash.com/photo-1607006479523-5d6fff45ddc7?w=200&auto=format&fit=crop' },
-];
+interface FormErrors {
+  [key: string]: string;
+}
 
 const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
 
 const inputClass = "w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-sm text-[#1c1c19] focus:outline-none focus:border-primary transition-colors placeholder:text-on-surface-variant/50";
 const labelClass = "block label-caps text-on-surface-variant mb-2";
+const errorClass = "text-error text-xs mt-1";
 
 export default function CheckoutPage() {
-  const [step, setStep] = useState<'shipping' | 'payment' | 'review'>('shipping');
-  const [submitted, setSubmitted] = useState(false);
+  const router = useRouter();
+  const { cart, isLoading: cartLoading, clearCart } = useCart();
+  const [submitting, setSubmitting] = useState(false);
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [generalError, setGeneralError] = useState<string | null>(null);
+  
   const [form, setForm] = useState<FormData>({
-    email: '', firstName: '', lastName: '', address: '', city: '',
-    state: '', postcode: '', country: 'United States',
-    cardName: '', cardNumber: '', cardExpiry: '', cardCvc: '', notes: '',
+    customerName: '',
+    customerEmail: '',
+    customerPhone: '',
+    shippingFirstName: '',
+    shippingLastName: '',
+    shippingAddress1: '',
+    shippingAddress2: '',
+    shippingCity: '',
+    shippingState: '',
+    shippingPostalCode: '',
+    shippingCountry: 'US',
+    shippingPhone: '',
+    notes: '',
   });
 
-  const set = (key: keyof FormData, val: string) => setForm(prev => ({ ...prev, [key]: val }));
+  const set = (key: keyof FormData, val: string) => {
+    setForm(prev => ({ ...prev, [key]: val }));
+    // Clear error for this field when user starts typing
+    if (errors[key]) {
+      setErrors(prev => ({ ...prev, [key]: '' }));
+    }
+  };
 
-  const subtotal = ORDER_ITEMS.reduce((s, i) => s + i.price * i.quantity, 0);
-  const shipping = 0;
-  const total = subtotal + shipping;
+  // Handle phone input with formatting
+  const setPhone = (key: 'customerPhone' | 'shippingPhone', val: string) => {
+    const formatted = formatPhoneInput(val);
+    setForm(prev => ({ ...prev, [key]: formatted }));
+    if (errors[key]) {
+      setErrors(prev => ({ ...prev, [key]: '' }));
+    }
+  };
 
-  if (submitted) {
+  // Validate form
+  const validate = (): boolean => {
+    const newErrors: FormErrors = {};
+
+    // Customer info
+    if (!form.customerName.trim()) newErrors.customerName = 'Name is required';
+    if (!form.customerEmail.trim()) {
+      newErrors.customerEmail = 'Email is required';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.customerEmail)) {
+      newErrors.customerEmail = 'Invalid email format';
+    }
+    
+    const customerPhoneE164 = formatPhoneToE164(form.customerPhone);
+    if (!form.customerPhone.trim()) {
+      newErrors.customerPhone = 'Phone is required';
+    } else if (!validatePhoneE164(customerPhoneE164)) {
+      newErrors.customerPhone = 'Invalid phone number (10 digits required)';
+    }
+
+    // Shipping address
+    if (!form.shippingFirstName.trim()) newErrors.shippingFirstName = 'First name is required';
+    if (!form.shippingLastName.trim()) newErrors.shippingLastName = 'Last name is required';
+    if (!form.shippingAddress1.trim()) newErrors.shippingAddress1 = 'Address is required';
+    if (!form.shippingCity.trim()) newErrors.shippingCity = 'City is required';
+    if (!form.shippingState.trim()) newErrors.shippingState = 'State is required';
+    if (!form.shippingPostalCode.trim()) newErrors.shippingPostalCode = 'Postal code is required';
+    if (!form.shippingCountry.trim()) newErrors.shippingCountry = 'Country is required';
+    
+    const shippingPhoneE164 = formatPhoneToE164(form.shippingPhone);
+    if (!form.shippingPhone.trim()) {
+      newErrors.shippingPhone = 'Phone is required';
+    } else if (!validatePhoneE164(shippingPhoneE164)) {
+      newErrors.shippingPhone = 'Invalid phone number (10 digits required)';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Submit checkout
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validate()) {
+      setGeneralError('Please fix the errors above before submitting.');
+      return;
+    }
+
+    if (!cart || !cart.token) {
+      setGeneralError('Your cart is empty. Please add items before checking out.');
+      return;
+    }
+
+    setSubmitting(true);
+    setGeneralError(null);
+
+    try {
+      const checkoutData: GuestCheckoutRequest = {
+        customer_name: form.customerName.trim(),
+        customer_email: form.customerEmail.trim().toLowerCase(),
+        customer_phone: formatPhoneToE164(form.customerPhone),
+        shipping_address: {
+          first_name: form.shippingFirstName.trim(),
+          last_name: form.shippingLastName.trim(),
+          company: undefined,
+          address_line1: form.shippingAddress1.trim(),
+          address_line2: form.shippingAddress2.trim() || undefined,
+          city: form.shippingCity.trim(),
+          state: form.shippingState.trim(),
+          postal_code: form.shippingPostalCode.trim(),
+          country: form.shippingCountry.trim(),
+          phone: formatPhoneToE164(form.shippingPhone),
+        },
+        notes: form.notes.trim() || undefined,
+        cart_token: cart.token,
+      };
+
+      const result = await guestCheckout(checkoutData);
+      
+      // Clear cart after successful checkout
+      await clearCart();
+      
+      // Redirect to confirmation page
+      router.push(`/orders/confirmation?order=${result.order.order_number}`);
+    } catch (err) {
+      console.error('Checkout error:', err);
+      const errorMessage = err instanceof Error ? err.message : 'Failed to place order. Please try again.';
+      setGeneralError(errorMessage);
+      
+      // Scroll to top to show error
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const items = cart?.items || [];
+  const subtotal = cart?.subtotal || 0;
+  const shipping = cart?.shipping || 0;
+  const tax = cart?.tax || 0;
+  const total = cart?.total || subtotal;
+
+  // Empty cart state
+  if (!cart || items.length === 0) {
     return (
       <main className="max-w-[1920px] mx-auto px-6 md:px-20 py-24 text-center space-y-6">
-        <div className="w-20 h-20 rounded-full bg-secondary-container flex items-center justify-center mx-auto">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: '40px', fontVariationSettings: "'FILL' 1, 'wght' 300" }}>check_circle</span>
-        </div>
-        <SectionLabel className="text-center">Order Confirmed</SectionLabel>
-        <h1 className="font-headline text-4xl text-[#1c1c19]">Thank You, {form.firstName || 'Friend'}!</h1>
-        <p className="text-on-surface-variant text-lg max-w-lg mx-auto">
-          Your order is being prepared with care in our atelier. You'll receive a confirmation email shortly.
+        <span className="material-symbols-outlined text-on-surface-variant mx-auto block" style={{ fontSize: '64px', fontVariationSettings: "'wght' 100" }}>
+          shopping_bag
+        </span>
+        <h1 className="font-headline text-4xl text-[#1c1c19]">Your Cart is Empty</h1>
+        <p className="text-on-surface-variant text-lg">
+          Please add items to your cart before proceeding to checkout.
         </p>
         <Link
           href="/products"
           className="honey-glow inline-block text-white font-label font-bold uppercase tracking-widest text-sm px-10 py-5 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity"
         >
-          Continue Shopping
+          Shop the Collection
         </Link>
       </main>
     );
@@ -75,178 +206,229 @@ export default function CheckoutPage() {
           <span className="material-symbols-outlined" style={{ fontSize: '14px', fontVariationSettings: "'wght' 300" }}>arrow_back</span>
           Back to basket
         </Link>
-        <h1 className="font-headline text-5xl text-[#1c1c19]">Checkout</h1>
+        <h1 className="font-headline text-5xl text-[#1c1c19]">Guest Checkout</h1>
+        <p className="text-on-surface-variant mt-2">Complete your order securely</p>
       </div>
 
-      {/* Step indicator */}
-      <div className="flex items-center gap-4 mb-10">
-        {(['shipping', 'payment', 'review'] as const).map((s, i) => (
-          <div key={s} className="flex items-center gap-3">
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold font-label transition-colors ${
-              step === s ? 'honey-glow text-white' :
-              ['shipping', 'payment', 'review'].indexOf(step) > i ? 'bg-secondary-container text-primary' : 'bg-surface-container text-on-surface-variant'
-            }`}>
-              {['shipping', 'payment', 'review'].indexOf(step) > i
-                ? <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>check</span>
-                : i + 1
-              }
-            </div>
-            <span className={`label-caps hidden sm:block ${step === s ? 'text-primary' : 'text-on-surface-variant'}`}>
-              {s}
-            </span>
-            {i < 2 && <div className="w-8 h-px bg-outline-variant" />}
+      {/* Global Error */}
+      {generalError && (
+        <div className="mb-8 bg-error/10 border border-error rounded-xl p-5 flex items-start gap-3">
+          <span className="material-symbols-outlined text-error" style={{ fontVariationSettings: "'wght' 300" }}>error</span>
+          <div className="flex-1">
+            <p className="font-semibold text-error">Checkout Error</p>
+            <p className="text-sm text-error/80 mt-1">{generalError}</p>
           </div>
-        ))}
-      </div>
+        </div>
+      )}
 
-      <div className="flex flex-col lg:flex-row gap-12">
-
+      <form onSubmit={handleSubmit} className="flex flex-col lg:flex-row gap-12">
         {/* Form */}
         <div className="flex-1 space-y-6">
+          {/* Customer Information */}
+          <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
+            <h2 className="font-headline text-2xl text-[#1c1c19]">Contact Information</h2>
 
-          {/* Shipping Step */}
-          {step === 'shipping' && (
-            <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
-              <h2 className="font-headline text-2xl text-[#1c1c19]">Shipping Details</h2>
-
-              <div>
-                <label className={labelClass}>Email Address</label>
-                <input type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="you@example.com" className={inputClass} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>First Name</label>
-                  <input type="text" value={form.firstName} onChange={e => set('firstName', e.target.value)} placeholder="Sarah" className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>Last Name</label>
-                  <input type="text" value={form.lastName} onChange={e => set('lastName', e.target.value)} placeholder="Johnson" className={inputClass} />
-                </div>
-              </div>
-
-              <div>
-                <label className={labelClass}>Street Address</label>
-                <input type="text" value={form.address} onChange={e => set('address', e.target.value)} placeholder="123 Meadow Lane" className={inputClass} />
-              </div>
-
-              <div className="grid grid-cols-3 gap-4">
-                <div className="col-span-2">
-                  <label className={labelClass}>City</label>
-                  <input type="text" value={form.city} onChange={e => set('city', e.target.value)} placeholder="Portland" className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>State</label>
-                  <input type="text" value={form.state} onChange={e => set('state', e.target.value)} placeholder="OR" className={inputClass} />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>Postcode</label>
-                  <input type="text" value={form.postcode} onChange={e => set('postcode', e.target.value)} placeholder="97201" className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>Country</label>
-                  <select value={form.country} onChange={e => set('country', e.target.value)} className={inputClass}>
-                    <option>United States</option>
-                    <option>Canada</option>
-                    <option>United Kingdom</option>
-                    <option>Australia</option>
-                  </select>
-                </div>
-              </div>
-
-              <div>
-                <label className={labelClass}>Order Notes (optional)</label>
-                <textarea value={form.notes} onChange={e => set('notes', e.target.value)} placeholder="Any special instructions for your order..." rows={3} className={`${inputClass} resize-none`} />
-              </div>
-
-              <button
-                onClick={() => setStep('payment')}
-                className="honey-glow w-full text-white font-label font-bold uppercase tracking-widest text-sm py-5 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity"
-              >
-                Continue to Payment
-              </button>
+            <div>
+              <label className={labelClass}>Full Name *</label>
+              <input 
+                type="text" 
+                value={form.customerName} 
+                onChange={e => set('customerName', e.target.value)} 
+                placeholder="Sarah Johnson" 
+                className={inputClass}
+                disabled={submitting}
+              />
+              {errors.customerName && <p className={errorClass}>{errors.customerName}</p>}
             </div>
-          )}
 
-          {/* Payment Step */}
-          {step === 'payment' && (
-            <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
-              <h2 className="font-headline text-2xl text-[#1c1c19]">Payment</h2>
+            <div>
+              <label className={labelClass}>Email Address *</label>
+              <input 
+                type="email" 
+                value={form.customerEmail} 
+                onChange={e => set('customerEmail', e.target.value)} 
+                placeholder="you@example.com" 
+                className={inputClass}
+                disabled={submitting}
+              />
+              {errors.customerEmail && <p className={errorClass}>{errors.customerEmail}</p>}
+            </div>
 
-              <div className="flex items-center gap-3 bg-secondary-container/30 rounded-xl p-4">
-                <span className="material-symbols-outlined text-primary" style={{ fontVariationSettings: "'wght' 200" }}>lock</span>
-                <p className="text-sm text-on-surface-variant">Your payment details are encrypted and secure.</p>
-              </div>
+            <div>
+              <label className={labelClass}>Phone Number * (US Format)</label>
+              <input 
+                type="tel" 
+                value={form.customerPhone} 
+                onChange={e => setPhone('customerPhone', e.target.value)} 
+                placeholder="(555) 123-4567" 
+                className={inputClass}
+                maxLength={14}
+                disabled={submitting}
+              />
+              <p className="text-xs text-on-surface-variant mt-1">We'll use this for order updates</p>
+              {errors.customerPhone && <p className={errorClass}>{errors.customerPhone}</p>}
+            </div>
+          </div>
 
+          {/* Shipping Address */}
+          <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
+            <h2 className="font-headline text-2xl text-[#1c1c19]">Shipping Address</h2>
+
+            <div className="grid grid-cols-2 gap-4">
               <div>
-                <label className={labelClass}>Name on Card</label>
-                <input type="text" value={form.cardName} onChange={e => set('cardName', e.target.value)} placeholder="Sarah Johnson" className={inputClass} />
+                <label className={labelClass}>First Name *</label>
+                <input 
+                  type="text" 
+                  value={form.shippingFirstName} 
+                  onChange={e => set('shippingFirstName', e.target.value)} 
+                  placeholder="Sarah" 
+                  className={inputClass}
+                  disabled={submitting}
+                />
+                {errors.shippingFirstName && <p className={errorClass}>{errors.shippingFirstName}</p>}
               </div>
-
               <div>
-                <label className={labelClass}>Card Number</label>
-                <input type="text" value={form.cardNumber} onChange={e => set('cardNumber', e.target.value)} placeholder="4242 4242 4242 4242" maxLength={19} className={inputClass} />
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClass}>Expiry Date</label>
-                  <input type="text" value={form.cardExpiry} onChange={e => set('cardExpiry', e.target.value)} placeholder="MM / YY" maxLength={7} className={inputClass} />
-                </div>
-                <div>
-                  <label className={labelClass}>CVC</label>
-                  <input type="text" value={form.cardCvc} onChange={e => set('cardCvc', e.target.value)} placeholder="123" maxLength={4} className={inputClass} />
-                </div>
-              </div>
-
-              <div className="flex gap-4">
-                <button onClick={() => setStep('shipping')} className="flex-1 border border-outline-variant text-on-surface-variant font-label uppercase tracking-widest text-sm py-4 rounded-xl hover:border-primary hover:text-primary transition-all">
-                  Back
-                </button>
-                <button onClick={() => setStep('review')} className="flex-[2] honey-glow text-white font-label font-bold uppercase tracking-widest text-sm py-4 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity">
-                  Review Order
-                </button>
+                <label className={labelClass}>Last Name *</label>
+                <input 
+                  type="text" 
+                  value={form.shippingLastName} 
+                  onChange={e => set('shippingLastName', e.target.value)} 
+                  placeholder="Johnson" 
+                  className={inputClass}
+                  disabled={submitting}
+                />
+                {errors.shippingLastName && <p className={errorClass}>{errors.shippingLastName}</p>}
               </div>
             </div>
-          )}
 
-          {/* Review Step */}
-          {step === 'review' && (
-            <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
-              <h2 className="font-headline text-2xl text-[#1c1c19]">Review & Place Order</h2>
+            <div>
+              <label className={labelClass}>Street Address *</label>
+              <input 
+                type="text" 
+                value={form.shippingAddress1} 
+                onChange={e => set('shippingAddress1', e.target.value)} 
+                placeholder="123 Meadow Lane" 
+                className={inputClass}
+                disabled={submitting}
+              />
+              {errors.shippingAddress1 && <p className={errorClass}>{errors.shippingAddress1}</p>}
+            </div>
 
-              <div className="space-y-2 bg-surface-container p-5 rounded-xl text-sm text-on-surface-variant">
-                <p className="font-semibold text-[#1c1c19] mb-1">Shipping to:</p>
-                <p>{form.firstName} {form.lastName}</p>
-                <p>{form.address}</p>
-                <p>{form.city}, {form.state} {form.postcode}</p>
-                <p>{form.country}</p>
-                <p className="mt-2">{form.email}</p>
+            <div>
+              <label className={labelClass}>Apartment, Suite, etc. (Optional)</label>
+              <input 
+                type="text" 
+                value={form.shippingAddress2} 
+                onChange={e => set('shippingAddress2', e.target.value)} 
+                placeholder="Apt 4B" 
+                className={inputClass}
+                disabled={submitting}
+              />
+            </div>
+
+            <div className="grid grid-cols-3 gap-4">
+              <div className="col-span-2">
+                <label className={labelClass}>City *</label>
+                <input 
+                  type="text" 
+                  value={form.shippingCity} 
+                  onChange={e => set('shippingCity', e.target.value)} 
+                  placeholder="Portland" 
+                  className={inputClass}
+                  disabled={submitting}
+                />
+                {errors.shippingCity && <p className={errorClass}>{errors.shippingCity}</p>}
               </div>
+              <div>
+                <label className={labelClass}>State *</label>
+                <input 
+                  type="text" 
+                  value={form.shippingState} 
+                  onChange={e => set('shippingState', e.target.value)} 
+                  placeholder="OR" 
+                  maxLength={2}
+                  className={inputClass}
+                  disabled={submitting}
+                />
+                {errors.shippingState && <p className={errorClass}>{errors.shippingState}</p>}
+              </div>
+            </div>
 
-              {form.notes && (
-                <div className="bg-surface-container p-5 rounded-xl text-sm">
-                  <p className="font-semibold text-[#1c1c19] mb-1">Notes:</p>
-                  <p className="text-on-surface-variant">{form.notes}</p>
-                </div>
-              )}
-
-              <div className="flex gap-4">
-                <button onClick={() => setStep('payment')} className="flex-1 border border-outline-variant text-on-surface-variant font-label uppercase tracking-widest text-sm py-4 rounded-xl hover:border-primary hover:text-primary transition-all">
-                  Back
-                </button>
-                <button
-                  onClick={() => setSubmitted(true)}
-                  className="flex-[2] honey-glow text-white font-label font-bold uppercase tracking-widest text-sm py-4 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity"
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className={labelClass}>Postal Code *</label>
+                <input 
+                  type="text" 
+                  value={form.shippingPostalCode} 
+                  onChange={e => set('shippingPostalCode', e.target.value)} 
+                  placeholder="97201" 
+                  className={inputClass}
+                  disabled={submitting}
+                />
+                {errors.shippingPostalCode && <p className={errorClass}>{errors.shippingPostalCode}</p>}
+              </div>
+              <div>
+                <label className={labelClass}>Country *</label>
+                <select 
+                  value={form.shippingCountry} 
+                  onChange={e => set('shippingCountry', e.target.value)} 
+                  className={inputClass}
+                  disabled={submitting}
                 >
-                  Place Order — {fmt(total)}
-                </button>
+                  <option value="US">United States</option>
+                  <option value="CA">Canada</option>
+                </select>
+                {errors.shippingCountry && <p className={errorClass}>{errors.shippingCountry}</p>}
               </div>
             </div>
-          )}
+
+            <div>
+              <label className={labelClass}>Shipping Phone * (US Format)</label>
+              <input 
+                type="tel" 
+                value={form.shippingPhone} 
+                onChange={e => setPhone('shippingPhone', e.target.value)} 
+                placeholder="(555) 123-4567" 
+                className={inputClass}
+                maxLength={14}
+                disabled={submitting}
+              />
+              <p className="text-xs text-on-surface-variant mt-1">For delivery contact</p>
+              {errors.shippingPhone && <p className={errorClass}>{errors.shippingPhone}</p>}
+            </div>
+          </div>
+
+          {/* Order Notes */}
+          <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
+            <h2 className="font-headline text-2xl text-[#1c1c19]">Order Notes (Optional)</h2>
+            <textarea 
+              value={form.notes} 
+              onChange={e => set('notes', e.target.value)} 
+              placeholder="Any special instructions for your order..." 
+              rows={4} 
+              className={`${inputClass} resize-none`}
+              disabled={submitting}
+            />
+          </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            disabled={submitting || cartLoading}
+            className="honey-glow w-full text-white font-label font-bold uppercase tracking-widest text-sm py-5 rounded-xl shadow-lg shadow-primary/10 hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {submitting ? (
+              <span className="flex items-center justify-center gap-2">
+                <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                </svg>
+                Placing Your Order...
+              </span>
+            ) : (
+              `Place Order — ${fmt(total)}`
+            )}
+          </button>
         </div>
 
         {/* Order Summary Sidebar */}
@@ -254,30 +436,56 @@ export default function CheckoutPage() {
           <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-5 sticky top-32">
             <h2 className="font-headline text-xl text-[#1c1c19]">Your Order</h2>
             <div className="space-y-4">
-              {ORDER_ITEMS.map(item => (
+              {items.map(item => (
                 <div key={item.id} className="flex gap-4">
                   <div className="w-14 h-16 rounded-lg overflow-hidden flex-shrink-0">
-                    <Image src={item.imageUrl} alt={item.name} width={56} height={64} className="w-full h-full object-cover" />
+                    <Image 
+                      src={item.product_image || 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=200&auto=format&fit=crop'} 
+                      alt={item.product_name} 
+                      width={56} 
+                      height={64} 
+                      className="w-full h-full object-cover" 
+                    />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-[#1c1c19] leading-tight">{item.name}</p>
+                    <p className="text-sm font-semibold text-[#1c1c19] leading-tight">{item.product_name}</p>
                     <p className="label-caps text-on-surface-variant mt-0.5">Qty: {item.quantity}</p>
                   </div>
-                  <p className="text-sm font-semibold text-primary">{fmt(item.price * item.quantity)}</p>
+                  <p className="text-sm font-semibold text-primary">{fmt(item.total_price)}</p>
                 </div>
               ))}
             </div>
             <div className="space-y-3 pt-4 border-t border-outline-variant text-sm">
               <div className="flex justify-between text-on-surface-variant"><span>Subtotal</span><span>{fmt(subtotal)}</span></div>
-              <div className="flex justify-between text-on-surface-variant"><span>Shipping</span><span>Free</span></div>
+              {tax > 0 && (
+                <div className="flex justify-between text-on-surface-variant"><span>Tax</span><span>{fmt(tax)}</span></div>
+              )}
+              <div className="flex justify-between text-on-surface-variant">
+                <span>Shipping</span>
+                <span>{shipping === 0 ? 'Free' : fmt(shipping)}</span>
+              </div>
             </div>
             <div className="flex justify-between font-semibold text-lg text-[#1c1c19] pt-3 border-t border-outline-variant">
               <span className="font-headline">Total</span>
               <span className="text-primary">{fmt(total)}</span>
             </div>
+            
+            {/* Trust signals */}
+            <div className="grid grid-cols-3 gap-2 pt-4 border-t border-outline-variant">
+              {[
+                { icon: 'lock', text: 'Secure' },
+                { icon: 'verified', text: 'Safe' },
+                { icon: 'eco', text: 'Eco Packed' },
+              ].map(s => (
+                <div key={s.text} className="text-center space-y-1">
+                  <span className="material-symbols-outlined text-on-surface-variant mx-auto block" style={{ fontSize: '18px', fontVariationSettings: "'wght' 200" }}>{s.icon}</span>
+                  <p className="label-caps text-on-surface-variant" style={{ fontSize: '9px' }}>{s.text}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-      </div>
+      </form>
     </main>
   );
 }
