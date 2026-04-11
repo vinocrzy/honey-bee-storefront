@@ -13,8 +13,8 @@ interface ProductCardProps {
   currency?: string;
 }
 
-export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge, tags = [], currency = 'USD' }: ProductCardProps) {
-  const formatted = new Intl.NumberFormat('en-US', { style: 'currency', currency }).format(price);
+export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge, tags = [], currency = 'INR' }: ProductCardProps) {
+  const formatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency }).format(price);
   return (
     <Link href={`/products/${slug}`} className="group block bg-surface-container-lowest rounded-xl sunlight-shadow overflow-hidden hover:shadow-xl transition-shadow duration-300">
       <div className="aspect-[4/5] overflow-hidden">

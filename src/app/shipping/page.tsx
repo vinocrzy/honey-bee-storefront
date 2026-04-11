@@ -12,7 +12,7 @@ import { FeatureStrip } from '@/components/ui/FeatureStrip';
 export const metadata: Metadata = {
   title: 'Shipping Information | Honey Bee Atelier',
   description:
-    'Shipping rates, delivery timelines, and free shipping details for Honey Bee Atelier orders across the US.',
+    'Shipping rates, delivery timelines, and free shipping details for Honey Bee Atelier orders across India.',
 };
 
 const SHIPPING_OPTIONS = [
@@ -20,29 +20,29 @@ const SHIPPING_OPTIONS = [
     icon: 'local_shipping',
     name: 'Standard Shipping',
     timeline: '3–5 business days',
-    cost: '$6.95',
+    cost: '₹99',
     note: 'Most orders arrive within 4 days',
   },
   {
     icon: 'rocket_launch',
     name: 'Express Shipping',
     timeline: '2 business days',
-    cost: '$14.95',
-    note: 'Order by 12pm PT for same-day dispatch',
+    cost: '₹199',
+    note: 'Order by 12pm IST for same-day dispatch',
   },
   {
     icon: 'flight',
-    name: 'Overnight Shipping',
+    name: 'Priority Shipping',
     timeline: 'Next business day',
-    cost: '$24.95',
-    note: 'Available Mon–Thu only',
+    cost: '₹349',
+    note: 'Available Mon–Fri only',
   },
   {
     icon: 'eco',
     name: 'Free Standard Shipping',
     timeline: '3–5 business days',
     cost: 'Free',
-    note: 'On all orders over $75',
+    note: 'On all orders over ₹999',
     highlight: true,
   },
 ];
@@ -54,7 +54,7 @@ const FAQS = [
   },
   {
     q: 'Do you ship internationally?',
-    a: 'Currently we ship within the United States only. International shipping is on our roadmap — sign up to our newsletter to be the first to know when it launches.',
+    a: 'Currently we ship within India only. International shipping is on our roadmap — sign up to our newsletter to be the first to know when it launches.',
   },
   {
     q: 'Can I change my shipping address after ordering?',
@@ -91,8 +91,8 @@ export default function ShippingPage() {
           Shipping <span className="italic font-normal text-[#7b5800]">Information</span>
         </h1>
         <p className="text-on-surface-variant text-xl leading-relaxed max-w-2xl">
-          We ship across the United States. Free standard shipping on all orders over $75.
-          Every order is hand-packed in our Portland atelier.
+          We ship across India. Free standard shipping on all orders over ₹999.
+          Every order is hand-packed in our Chennai atelier.
         </p>
       </section>
 
@@ -108,7 +108,7 @@ export default function ShippingPage() {
         </div>
         <div>
           <h2 className="font-headline text-2xl text-[#1c1c19] mb-1">
-            Free shipping on orders over $75
+            Free shipping on orders over ₹999
           </h2>
           <p className="text-on-surface-variant text-sm leading-relaxed">
             Add a few bars to your order and we'll cover standard shipping — no code needed,

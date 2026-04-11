@@ -5,7 +5,7 @@ interface Feature {
 }
 
 const DEFAULT_FEATURES: Feature[] = [
-  { icon: 'local_shipping', title: 'Free Shipping', description: 'On orders over $75 across the US' },
+  { icon: 'local_shipping', title: 'Free Shipping', description: 'On orders over ₹999 across India' },
   { icon: 'eco', title: 'Cold Process', description: 'Six-week cure for a richer, longer-lasting bar' },
   { icon: 'spa', title: 'Skin-Safe Formula', description: 'pH-balanced, dermatologist reviewed' },
   { icon: 'volunteer_activism', title: 'Cruelty-Free', description: 'Never tested on animals, ever' },

@@ -8,10 +8,10 @@ const inputClass = "w-full bg-surface-container-lowest border border-outline-var
 const labelClass = "block label-caps text-on-surface-variant mb-2";
 
 const FAQS = [
-  { q: 'How long does shipping take?', a: 'Standard shipping takes 3–5 business days within the US. Free shipping on orders over $75.' },
+  { q: 'How long does shipping take?', a: 'Standard shipping takes 3–5 business days within India. Free shipping on orders over ₹999.' },
   { q: 'Are your soaps suitable for sensitive skin?', a: 'Many of our bars are formulated specifically for sensitive skin and are clinically reviewed for pH balance. Look for the "Sensitive Skin" tag on product pages.' },
   { q: 'What is cold-process soap?', a: 'Cold-process is a traditional soap-making method where oils and lye are combined at room temperature. No heat shortcuts — this preserves nutrients and creates a naturally glycerin-rich bar that cures over six weeks.' },
-  { q: 'Do you offer wholesale?', a: 'Yes! We work with select boutiques and spas. Email us at trade@honeybee-atelier.com for our wholesale brochure.' },
+  { q: 'Do you offer wholesale?', a: 'Yes! We work with select boutiques and spas across South India. Email us at trade@honeybee-atelier.com for our wholesale brochure.' },
 ];
 
 export default function ContactPage() {
@@ -39,8 +39,8 @@ export default function ContactPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 max-w-4xl mx-auto text-center">
           {[
             { icon: 'mail', title: 'Email Us', value: 'hello@honeybee-atelier.com', sub: 'Replies within 1 business day' },
-            { icon: 'phone', title: 'Call Us', value: '+1 (503) 555-0182', sub: 'Mon–Fri, 9am–5pm PT' },
-            { icon: 'storefront', title: 'Atelier', value: '123 Botanical Lane', sub: 'Portland, OR 97201' },
+            { icon: 'phone', title: 'Call Us', value: '+91 98765 43210', sub: 'Mon–Sat, 10am–6pm IST' },
+            { icon: 'storefront', title: 'Atelier', value: '12, Anna Salai', sub: 'Chennai, Tamil Nadu 600002' },
           ].map(c => (
             <div key={c.title} className="space-y-3">
               <div className="w-14 h-14 rounded-full bg-secondary-container flex items-center justify-center mx-auto">
@@ -75,7 +75,7 @@ export default function ContactPage() {
           ) : (
             <>
               <div className="grid sm:grid-cols-2 gap-4">
-                <div><label className={labelClass}>Your Name</label><input type="text" value={form.name} onChange={e => set('name', e.target.value)} placeholder="Sarah Johnson" className={inputClass} /></div>
+                <div><label className={labelClass}>Your Name</label><input type="text" value={form.name} onChange={e => set('name', e.target.value)} placeholder="Priya Nair" className={inputClass} /></div>
                 <div><label className={labelClass}>Email Address</label><input type="email" value={form.email} onChange={e => set('email', e.target.value)} placeholder="you@example.com" className={inputClass} /></div>
               </div>
               <div>

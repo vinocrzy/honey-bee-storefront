@@ -1,14 +1,15 @@
 /**
  * Phone Number Utilities
  * E.164 format validation and formatting for checkout
+ * India (+91) — 10-digit mobile numbers
  */
 
 /**
  * Format phone number to E.164 format
- * Converts: (555) 123-4567 → +15551234567
+ * Converts: 98765 43210 → +919876543210
  * If already E.164, returns as-is
  */
-export const formatPhoneToE164 = (phone: string, countryCode: string = '1'): string => {
+export const formatPhoneToE164 = (phone: string, countryCode: string = '91'): string => {
   // Remove all non-digit characters
   const digits = phone.replace(/\D/g, '');
   
@@ -17,12 +18,13 @@ export const formatPhoneToE164 = (phone: string, countryCode: string = '1'): str
     return phone;
   }
   
-  // Add country code if not present
+  // Indian mobile: 10 digits starting with 6-9
   if (digits.length === 10) {
     return `+${countryCode}${digits}`;
   }
   
-  if (digits.length === 11 && digits.startsWith('1')) {
+  // Already has country code 91 prefix
+  if (digits.length === 12 && digits.startsWith('91')) {
     return `+${digits}`;
   }
   
@@ -41,39 +43,35 @@ export const validatePhoneE164 = (phone: string): boolean => {
 };
 
 /**
- * Format phone for display
- * +15551234567 → (555) 123-4567
+ * Format phone for display (Indian format)
+ * +919876543210 → +91 98765 43210
  */
 export const formatPhoneForDisplay = (phone: string): string => {
-  // Remove + and country code for US numbers
   const cleaned = phone.replace(/\D/g, '');
   
-  if (cleaned.length === 11 && cleaned.startsWith('1')) {
-    const areaCode = cleaned.slice(1, 4);
-    const middle = cleaned.slice(4, 7);
-    const last = cleaned.slice(7);
-    return `(${areaCode}) ${middle}-${last}`;
+  // Indian mobile with country code (12 digits: 91 + 10)
+  if (cleaned.length === 12 && cleaned.startsWith('91')) {
+    const mobile = cleaned.slice(2);
+    return `+91 ${mobile.slice(0, 5)} ${mobile.slice(5)}`;
   }
   
+  // Plain 10-digit Indian mobile
   if (cleaned.length === 10) {
-    const areaCode = cleaned.slice(0, 3);
-    const middle = cleaned.slice(3, 6);
-    const last = cleaned.slice(6);
-    return `(${areaCode}) ${middle}-${last}`;
+    return `${cleaned.slice(0, 5)} ${cleaned.slice(5)}`;
   }
   
   return phone;
 };
 
 /**
- * Auto-format phone number as user types
+ * Auto-format phone number as user types (Indian format)
  * Returns formatted string for input value
+ * e.g. 9876543210 → 98765 43210
  */
 export const formatPhoneInput = (value: string): string => {
   const digits = value.replace(/\D/g, '');
   
   if (digits.length === 0) return '';
-  if (digits.length <= 3) return digits;
-  if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`;
-  return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6, 10)}`;
+  if (digits.length <= 5) return digits;
+  return `${digits.slice(0, 5)} ${digits.slice(5, 10)}`;
 };

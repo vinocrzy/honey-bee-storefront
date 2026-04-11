@@ -12,10 +12,10 @@ import { FeatureStrip } from '@/components/ui/FeatureStrip';
 
 export const metadata: Metadata = {
   title: 'Our Story | Honey Bee Atelier',
-  description: 'From ICU nurse to artisan soap maker. How fifteen years of clinical practice inspired a gentler kind of skin care.',
+  description: 'From Ayurvedic herbalist to artisan soap maker. How generations of South Indian botanical wisdom inspired a gentler kind of skin care.',
   openGraph: {
     title: 'Our Story | Honey Bee Atelier',
-    description: 'From ICU nurse to artisan soap maker.',
+    description: 'From Ayurvedic herbalist to artisan soap maker.',
   },
 };
 
@@ -33,13 +33,13 @@ export default function OurStoryPage() {
       {/* ── Founder Hero ── */}
       <section className="px-6 md:px-20 pt-12 pb-24 grid grid-cols-1 md:grid-cols-12 gap-12 items-center">
         <div className="md:col-span-6 z-10">
-          <SectionLabel>From Clinical to Craft</SectionLabel>
+          <SectionLabel>From Tradition to Craft</SectionLabel>
           <h1 className="font-headline text-5xl md:text-7xl text-[#1c1c19] leading-tight mb-8">
             The Founder&apos;s<br />
             <span className="italic font-normal">Journey</span>
           </h1>
           <p className="text-lg text-on-surface-variant leading-relaxed mb-10 max-w-xl">
-            For fifteen years, Sarah worked the night shift as a critical care nurse. In the sterile, high-stakes environment of the ICU, she found solace in the science of healing — but her own skin, ravaged by clinical detergents and stress, cried out for a gentler kind of care.
+            For generations, Priyaanga’s family tended herb gardens in the Nilgiri foothills of Tamil Nadu. Growing up surrounded by turmeric fields, vetiver roots, and wild honey apiaries, she absorbed the rhythms of South Indian botanical knowledge long before she could name them. After studying Ayurvedic formulation in Coimbatore, she returned home to Chennai with one purpose — to honour that wisdom in every bar of soap she made.
           </p>
           <div className="flex items-center gap-6 flex-wrap">
             <Link
@@ -61,7 +61,7 @@ export default function OurStoryPage() {
           <div className="aspect-[4/5] overflow-hidden rounded-xl">
             <Image
               src="https://images.unsplash.com/photo-1595274459742-4a41d35784b4?w=800&auto=format&fit=crop"
-              alt="Sarah, founder of Honey Bee Atelier, in the soap atelier"
+              alt="Priyaanga, founder of Honey Bee Atelier, in the soap atelier"
               width={800}
               height={1000}
               className="w-full h-full object-cover"
@@ -71,9 +71,9 @@ export default function OurStoryPage() {
           {/* Pull-quote overlay */}
           <div className="absolute bottom-8 left-8 right-8 bg-surface-container-lowest/90 backdrop-blur-sm p-6 rounded-xl">
             <p className="font-headline text-lg italic text-[#1c1c19] leading-relaxed">
-              &ldquo;I wanted to make something that healed, not just cleaned.&rdquo;
+              &ldquo;I wanted to carry forward what our grandmothers already knew.&rdquo;
             </p>
-            <p className="label-caps text-primary mt-3">— Sarah J., Founder</p>
+            <p className="label-caps text-primary mt-3">— Priyaanga, Founder</p>
           </div>
         </div>
       </section>
@@ -126,10 +126,10 @@ export default function OurStoryPage() {
             <span className="italic font-normal">Every Apiary</span>
           </h2>
           <p className="text-on-surface-variant leading-relaxed text-lg">
-            Our honey comes from a single family-run apiary fifteen miles from our atelier. Our botanicals are sourced from certified organic cooperatives with living wage policies. We believe radical transparency isn&apos;t a feature — it&apos;s the baseline.
+            Our honey is sourced from small family-run apiaries in the Nilgiri hills. Our botanicals — turmeric, neem, vetiver, and sandalwood — come from certified organic farms across Tamil Nadu and Kerala. We believe radical transparency isn&apos;t a feature — it&apos;s the baseline.
           </p>
           <ul className="space-y-3">
-            {['Certified Organic Ingredients', 'Direct Farm Relationships', 'Living Wage Suppliers', 'Zero Synthetic Fragrances'].map(item => (
+            {['Certified Organic Ingredients', 'Direct Farm Relationships — Tamil Nadu & Kerala', 'Fair Trade Tribal Honey Collectors', 'Zero Synthetic Fragrances'].map(item => (
               <li key={item} className="flex items-center gap-3 text-sm text-on-surface-variant">
                 <span
                   className="material-symbols-outlined text-primary"
@@ -146,9 +146,9 @@ export default function OurStoryPage() {
 
       {/* ── Nurse's Promise Band ── */}
       <NursePromiseBand
-        quote="I spent fifteen years keeping people alive. Now I spend my days making products that help skin thrive. The science is the same. The love is deeper."
-        attribution="Sarah J., RN — Founder & Lead Formulator"
-        eyebrow="THE NURSE'S PROMISE"
+        quote="I grew up watching my paati grind turmeric and coconut oil by hand each morning. That ritual — that love — is what I pour into every bar we make."
+        attribution="Priyaanga — Founder & Lead Formulator, Honey Bee Atelier, Chennai"
+        eyebrow="THE FOUNDER'S PROMISE"
       />
 
       {/* ── Feature Strip ── */}

@@ -71,7 +71,7 @@ export default async function HomePage() {
               href="/our-story"
               className="label-caps text-[11px] text-[#7b5800] underline hover:no-underline transition-all"
             >
-              The Nurse&apos;s Story →
+              Priyaanga&apos;s Story →
             </Link>
           </div>
         </div>

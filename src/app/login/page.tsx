@@ -109,14 +109,14 @@ export default function LoginPage() {
               id="login"
               type="text"
               autoComplete="username tel email"
-              placeholder="+1 555 000 0000 or hello@example.com"
+              placeholder="+91 98765 43210 or hello@example.com"
               value={login_field}
               onChange={(e) => setLoginField(e.target.value)}
               className={inputClass}
               required
             />
             <p className="mt-1.5 text-xs text-on-surface-variant">
-              Phone number format: +1 XXX XXX XXXX (international)
+              Phone number format: +91 XXXXX XXXXX (India)
             </p>
           </div>
 

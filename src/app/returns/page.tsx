@@ -34,7 +34,7 @@ const STEPS = [
     icon: 'local_shipping',
     title: 'Ship it Back',
     description:
-      'Pack the item securely in its original packaging if possible. Drop off at any USPS location.',
+      'Pack the item securely in its original packaging if possible. Drop off at any India Post or courier location.',
   },
   {
     step: '04',

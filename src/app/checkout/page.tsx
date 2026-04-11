@@ -29,7 +29,7 @@ interface FormErrors {
   [key: string]: string;
 }
 
-const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+const fmt = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n);
 
 const inputClass = "w-full bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-sm text-[#1c1c19] focus:outline-none focus:border-primary transition-colors placeholder:text-on-surface-variant/50";
 const labelClass = "block label-caps text-on-surface-variant mb-2";
@@ -53,7 +53,7 @@ export default function CheckoutPage() {
     shippingCity: '',
     shippingState: '',
     shippingPostalCode: '',
-    shippingCountry: 'US',
+    shippingCountry: 'IN',
     shippingPhone: '',
     notes: '',
   });
@@ -91,7 +91,7 @@ export default function CheckoutPage() {
     if (!form.customerPhone.trim()) {
       newErrors.customerPhone = 'Phone is required';
     } else if (!validatePhoneE164(customerPhoneE164)) {
-      newErrors.customerPhone = 'Invalid phone number (10 digits required)';
+      newErrors.customerPhone = 'Invalid Indian phone number (10 digits required, e.g. 98765 43210)';
     }
 
     // Shipping address
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
     if (!form.shippingPhone.trim()) {
       newErrors.shippingPhone = 'Phone is required';
     } else if (!validatePhoneE164(shippingPhoneE164)) {
-      newErrors.shippingPhone = 'Invalid phone number (10 digits required)';
+      newErrors.shippingPhone = 'Invalid Indian phone number (10 digits required, e.g. 98765 43210)';
     }
 
     setErrors(newErrors);
@@ -234,7 +234,7 @@ export default function CheckoutPage() {
                 type="text" 
                 value={form.customerName} 
                 onChange={e => set('customerName', e.target.value)} 
-                placeholder="Sarah Johnson" 
+                placeholder="Priya Nair" 
                 className={inputClass}
                 disabled={submitting}
               />
@@ -255,14 +255,14 @@ export default function CheckoutPage() {
             </div>
 
             <div>
-              <label className={labelClass}>Phone Number * (US Format)</label>
+              <label className={labelClass}>Phone Number * (India)</label>
               <input 
                 type="tel" 
                 value={form.customerPhone} 
                 onChange={e => setPhone('customerPhone', e.target.value)} 
-                placeholder="(555) 123-4567" 
+                placeholder="98765 43210" 
                 className={inputClass}
-                maxLength={14}
+                maxLength={11}
                 disabled={submitting}
               />
               <p className="text-xs text-on-surface-variant mt-1">We'll use this for order updates</p>
@@ -281,7 +281,7 @@ export default function CheckoutPage() {
                   type="text" 
                   value={form.shippingFirstName} 
                   onChange={e => set('shippingFirstName', e.target.value)} 
-                  placeholder="Sarah" 
+                  placeholder="Priya" 
                   className={inputClass}
                   disabled={submitting}
                 />
@@ -293,7 +293,7 @@ export default function CheckoutPage() {
                   type="text" 
                   value={form.shippingLastName} 
                   onChange={e => set('shippingLastName', e.target.value)} 
-                  placeholder="Johnson" 
+                  placeholder="Nair" 
                   className={inputClass}
                   disabled={submitting}
                 />
@@ -307,7 +307,7 @@ export default function CheckoutPage() {
                 type="text" 
                 value={form.shippingAddress1} 
                 onChange={e => set('shippingAddress1', e.target.value)} 
-                placeholder="123 Meadow Lane" 
+                  placeholder="42, Gandhi Road" 
                 className={inputClass}
                 disabled={submitting}
               />
@@ -333,7 +333,7 @@ export default function CheckoutPage() {
                   type="text" 
                   value={form.shippingCity} 
                   onChange={e => set('shippingCity', e.target.value)} 
-                  placeholder="Portland" 
+                  placeholder="Chennai" 
                   className={inputClass}
                   disabled={submitting}
                 />
@@ -345,7 +345,7 @@ export default function CheckoutPage() {
                   type="text" 
                   value={form.shippingState} 
                   onChange={e => set('shippingState', e.target.value)} 
-                  placeholder="OR" 
+                  placeholder="TN" 
                   maxLength={2}
                   className={inputClass}
                   disabled={submitting}
@@ -361,7 +361,7 @@ export default function CheckoutPage() {
                   type="text" 
                   value={form.shippingPostalCode} 
                   onChange={e => set('shippingPostalCode', e.target.value)} 
-                  placeholder="97201" 
+                  placeholder="600001" 
                   className={inputClass}
                   disabled={submitting}
                 />
@@ -375,22 +375,21 @@ export default function CheckoutPage() {
                   className={inputClass}
                   disabled={submitting}
                 >
-                  <option value="US">United States</option>
-                  <option value="CA">Canada</option>
+                  <option value="IN">India</option>
                 </select>
                 {errors.shippingCountry && <p className={errorClass}>{errors.shippingCountry}</p>}
               </div>
             </div>
 
             <div>
-              <label className={labelClass}>Shipping Phone * (US Format)</label>
+              <label className={labelClass}>Shipping Phone * (India)</label>
               <input 
                 type="tel" 
                 value={form.shippingPhone} 
                 onChange={e => setPhone('shippingPhone', e.target.value)} 
-                placeholder="(555) 123-4567" 
+                placeholder="98765 43210" 
                 className={inputClass}
-                maxLength={14}
+                maxLength={11}
                 disabled={submitting}
               />
               <p className="text-xs text-on-surface-variant mt-1">For delivery contact</p>

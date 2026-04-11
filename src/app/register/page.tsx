@@ -18,7 +18,7 @@ const inputClass =
 
 /**
  * Attempt to format a loose phone entry into E.164.
- * Digits-only US/CA (10 digits) → +1XXXXXXXXXX
+ * Digits-only India (10 digits starting 6-9) → +91XXXXXXXXXX
  * Already E.164 → return as-is
  * Otherwise return the raw trimmed string (let backend validate)
  */
@@ -26,8 +26,8 @@ function normalisePhone(raw: string): string {
   const trimmed = raw.trim();
   if (trimmed.startsWith('+')) return trimmed; // Already international
   const digits = trimmed.replace(/\D/g, '');
-  if (digits.length === 10) return `+1${digits}`; // US/CA 10-digit
-  if (digits.length === 11 && digits.startsWith('1')) return `+${digits}`;
+  if (digits.length === 10) return `+91${digits}`; // Indian 10-digit mobile
+  if (digits.length === 12 && digits.startsWith('91')) return `+${digits}`;
   return trimmed;
 }
 
@@ -77,7 +77,7 @@ export default function RegisterPage() {
     } else {
       const e164 = normalisePhone(form.phone);
       if (!/^\+\d{7,15}$/.test(e164)) {
-        errors.phone = 'Enter a valid phone number, e.g. +1 555 000 0000';
+        errors.phone = 'Enter a valid Indian mobile number, e.g. +91 98765 43210';
       }
     }
     if (form.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) {
@@ -182,7 +182,7 @@ export default function RegisterPage() {
                 name="first_name"
                 type="text"
                 autoComplete="given-name"
-                placeholder="Amara"
+                placeholder="Priya"
                 value={form.first_name}
                 onChange={handleChange}
                 className={inputClass}
@@ -200,7 +200,7 @@ export default function RegisterPage() {
                 name="last_name"
                 type="text"
                 autoComplete="family-name"
-                placeholder="Ngozi"
+                placeholder="Krishnan"
                 value={form.last_name}
                 onChange={handleChange}
                 className={inputClass}
@@ -222,7 +222,7 @@ export default function RegisterPage() {
               name="phone"
               type="tel"
               autoComplete="tel"
-              placeholder="+1 555 000 0000"
+              placeholder="+91 98765 43210"
               value={form.phone}
               onChange={handleChange}
               className={inputClass}

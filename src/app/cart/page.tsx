@@ -7,7 +7,7 @@ import { SectionLabel } from '@/components/ui/SectionLabel';
 import { NursePromiseBand } from '@/components/ui/NursePromiseBand';
 import { useCart } from '@/contexts/CartContext';
 
-const FREE_SHIPPING_THRESHOLD = 75;
+const FREE_SHIPPING_THRESHOLD = 999;
 
 export default function CartPage() {
   const { cart, isLoading, error, updateQuantity, removeFromCart } = useCart();
@@ -31,12 +31,12 @@ export default function CartPage() {
 
   const items = cart?.items || [];
   const subtotal = cart?.subtotal || 0;
-  const shipping = cart?.shipping || (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 9.95);
+  const shipping = cart?.shipping || (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 99);
   const tax = cart?.tax || 0;
   const total = cart?.total || (subtotal + shipping + tax);
   const toFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
 
-  const fmt = (n: number) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(n);
+  const fmt = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n);
 
   // Loading state
   if (isLoading && !cart) {
