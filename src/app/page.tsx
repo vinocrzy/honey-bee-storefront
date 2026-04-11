@@ -176,7 +176,7 @@ export default async function HomePage() {
                   <div className="p-5">
                     <div className="flex justify-between items-baseline mb-1">
                       <h3 className="font-headline text-lg text-[#1c1c19] group-hover:text-[#7b5800] transition-colors">{p.name}</h3>
-                      <span className="font-body font-semibold text-[#7b5800]">${p.price.toFixed(2)}</span>
+                      <span className="font-body font-semibold text-[#7b5800]">${Number(p.price).toFixed(2)}</span>
                     </div>
                     {p.short_description && (
                       <p className="label-caps text-[10px] text-[#4f4634] mb-3 line-clamp-1">{p.short_description}</p>
