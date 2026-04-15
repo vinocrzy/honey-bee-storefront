@@ -127,8 +127,9 @@ export function ShopClientShell() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-16">
-      {/* Sidebar - disabled filters for MVP*/}
+      {/* Sidebar - now with real categories */}
       <FilterSidebar
+        categories={categories}
         selectedCategory={selectedCategory}
         selectedSkinTypes={[]}
         selectedFragrances={[]}

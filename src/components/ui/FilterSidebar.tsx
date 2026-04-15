@@ -1,8 +1,8 @@
 'use client';
 
 import { FilterChip } from './FilterChip';
+import type { Category } from '@/types';
 
-const CATEGORIES = ['Soaps', 'Oils', 'Body Butter', 'Collections'];
 const SKIN_TYPES = ['Sensitive', 'Dry', 'Oily', 'Normal', 'Combination'];
 const FRAGRANCES = [
   { name: 'Floral', count: 12 },
@@ -13,6 +13,7 @@ const FRAGRANCES = [
 ];
 
 interface FilterSidebarProps {
+  categories?: Category[];
   selectedCategory?: string;
   selectedSkinTypes?: string[];
   selectedFragrances?: string[];
@@ -22,6 +23,7 @@ interface FilterSidebarProps {
 }
 
 export function FilterSidebar({
+  categories = [],
   selectedCategory = '',
   selectedSkinTypes = [],
   selectedFragrances = [],
@@ -35,19 +37,39 @@ export function FilterSidebar({
       <div className="space-y-5">
         <h3 className="font-label text-xs uppercase tracking-widest font-bold text-[#1c1c19]">Categories</h3>
         <div className="flex flex-col space-y-3">
-          {CATEGORIES.map((cat) => (
-            <label key={cat} className="flex items-center group cursor-pointer" onClick={() => onCategoryChange?.(cat)}>
+          {/* All Products option */}
+          <label 
+            className="flex items-center group cursor-pointer" 
+            onClick={() => onCategoryChange?.('')}
+          >
+            <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
+              selectedCategory === '' ? 'border-primary' : 'border-outline-variant group-hover:border-primary'
+            }`}>
+              <div className={`w-2.5 h-2.5 rounded-full bg-primary transition-opacity ${
+                selectedCategory === '' ? 'opacity-100' : 'opacity-0 group-hover:opacity-20'
+              }`} />
+            </div>
+            <span className={`ml-3 font-label text-sm ${
+              selectedCategory === '' ? 'text-primary font-bold' : 'text-on-surface-variant'
+            }`}>
+              All Products
+            </span>
+          </label>
+          
+          {/* Real categories from API */}
+          {categories.map((cat) => (
+            <label key={cat.id} className="flex items-center group cursor-pointer" onClick={() => onCategoryChange?.(cat.slug)}>
               <div className={`w-5 h-5 rounded-full border flex items-center justify-center transition-all ${
-                selectedCategory === cat ? 'border-primary' : 'border-outline-variant group-hover:border-primary'
+                selectedCategory === cat.slug ? 'border-primary' : 'border-outline-variant group-hover:border-primary'
               }`}>
                 <div className={`w-2.5 h-2.5 rounded-full bg-primary transition-opacity ${
-                  selectedCategory === cat ? 'opacity-100' : 'opacity-0 group-hover:opacity-20'
+                  selectedCategory === cat.slug ? 'opacity-100' : 'opacity-0 group-hover:opacity-20'
                 }`} />
               </div>
               <span className={`ml-3 font-label text-sm ${
-                selectedCategory === cat ? 'text-primary font-bold' : 'text-on-surface-variant'
+                selectedCategory === cat.slug ? 'text-primary font-bold' : 'text-on-surface-variant'
               }`}>
-                {cat}
+                {cat.name}
               </span>
             </label>
           ))}

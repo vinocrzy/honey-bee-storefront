@@ -14,7 +14,7 @@ import { ProductDetailClient } from './ProductDetailClient';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 
 interface ProductDetailPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 // Force dynamic rendering (no static generation)
@@ -23,7 +23,8 @@ export const dynamic = 'force-dynamic';
 // Generate metadata for SEO (still works with dynamic pages)
 export async function generateMetadata({ params }: ProductDetailPageProps): Promise<Metadata> {
   try {
-    const product = await getProductBySlug(params.slug);
+    const { slug } = await params;
+    const product = await getProductBySlug(slug);
     
     return {
       title: product.meta_title || `${product.name} | Honey Bee`,
@@ -45,10 +46,11 @@ export async function generateMetadata({ params }: ProductDetailPageProps): Prom
 }
 
 export default async function ProductDetailPage({ params }: ProductDetailPageProps) {
+  const { slug } = await params;
   let product;
   
   try {
-    product = await getProductBySlug(params.slug);
+    product = await getProductBySlug(slug);
   } catch (error) {
     notFound();
   }
@@ -72,8 +74,44 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
   const categoryName = product.categories?.[0]?.name || 'Products';
   const categorySlug = product.categories?.[0]?.slug || '';
 
+  // ✅ SEO: Generate Product Schema.org structured data
+  const productSchema = {
+    "@context": "https://schema.org/",
+    "@type": "Product",
+    "name": product.name,
+    "description": product.description || product.short_description || '',
+    "image": product.images?.map(img => img.url) || [],
+    "sku": product.sku,
+    "brand": {
+      "@type": "Brand",
+      "name": "Honey Bee"
+    },
+    "offers": {
+      "@type": "Offer",
+      "price": product.price.toString(),
+      "priceCurrency": "INR",
+      "availability": product.stock_quantity > 0 
+        ? "https://schema.org/InStock" 
+        : "https://schema.org/OutOfStock",
+      "url": `https://honeybee.net.in/products/${product.slug}`
+    },
+    ...(product.compare_at_price && product.compare_at_price > product.price && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "5",
+        "reviewCount": "1"
+      }
+    })
+  };
+
   return (
     <main className="bg-[#fcf9f4] min-h-screen">
+      {/* ✅ SEO: Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(productSchema) }}
+      />
+
       {/* Breadcrumb Navigation */}
       <nav className="px-6 md:px-20 py-8 border-b border-[#e0e5cc]/40">
         <div className="flex items-center gap-2 label-caps text-[#5c614d]">

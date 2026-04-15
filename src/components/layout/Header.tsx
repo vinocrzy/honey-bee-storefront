@@ -59,10 +59,10 @@ export function Header() {
           {/* Search icon */}
           <Link
             href="/search"
-            aria-label="Search"
+            aria-label="Search products"
             className="hidden md:block text-[#4f4634] hover:text-[#7b5800] transition-colors"
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'wght' 200" }}>
+            <span className="material-symbols-outlined" aria-hidden="true" style={{ fontVariationSettings: "'wght' 200" }}>
               search
             </span>
           </Link>
@@ -71,11 +71,11 @@ export function Header() {
           {!authLoading && (
             <Link
               href={isAuthenticated ? '/account' : '/login'}
-              aria-label={isAuthenticated ? 'Account' : 'Login'}
+              aria-label={isAuthenticated ? 'My Account' : 'Login to your account'}
               className="hidden md:block text-[#4f4634] hover:text-[#7b5800] transition-colors"
               title={isAuthenticated ? 'My Account' : 'Login'}
             >
-              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'wght' 200" }}>
+              <span className="material-symbols-outlined" aria-hidden="true" style={{ fontVariationSettings: "'wght' 200" }}>
                 {isAuthenticated ? 'person' : 'login'}
               </span>
             </Link>
@@ -84,17 +84,20 @@ export function Header() {
           {/* Cart */}
           <Link
             href="/cart"
-            aria-label="Cart"
+            aria-label={`Shopping cart with${itemCount > 0 ? ` ${itemCount} item${itemCount > 1 ? 's' : ''}` : ' 0 items'}`}
             className="relative text-[#4f4634] hover:text-[#7b5800] transition-colors"
           >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'wght' 200" }}>
+            <span className="material-symbols-outlined" aria-hidden="true" style={{ fontVariationSettings: "'wght' 200" }}>
               shopping_bag
+            </span>
             {itemCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 honey-glow text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-label">
+              <span 
+                className="absolute -top-1.5 -right-1.5 honey-glow text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-label"
+                aria-hidden="true"
+              >
                 {itemCount}
               </span>
             )}
-            </span>
           </Link>
 
           {/* Mobile menu toggle */}

@@ -88,22 +88,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     try {
       let token = getCartToken();
       
-      // If no cart token exists, create new cart
+      // If no cart token exists, create new cart FIRST
       if (!token && !isAuthenticated()) {
-        const newCart = await cartApi.createCart();
-        token = newCart.token;
-        setCartToken(token);
-        setCart(newCart.cart);
+        const newCartResponse = await cartApi.createCart();
+        token = newCartResponse.token;
+        setCartToken(token); // Save token immediately after cart creation
+        setCart(newCartResponse.cart);
       }
 
-      // Add item to cart
+      // Add item to cart (we now have a valid token)
       const updatedCart = await cartApi.addItem(data, token || undefined);
       setCart(updatedCart);
-
-      // Save token if cart created
-      if (updatedCart.token && !isAuthenticated()) {
-        setCartToken(updatedCart.token);
-      }
+      
+      // Token already saved above, no need to check again
     } catch (err) {
       console.error('Failed to add to cart:', err);
       setError(err instanceof Error ? err.message : 'Failed to add to cart');

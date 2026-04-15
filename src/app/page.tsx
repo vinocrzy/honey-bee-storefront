@@ -116,9 +116,11 @@ export default async function HomePage() {
                 {col.image_url && (
                   <Image
                     src={col.image_url}
-                    alt={col.name}
+                    alt={`${col.name} collection - artisan handmade soaps`}
                     fill
                     className="object-cover group-hover:scale-105 transition-transform duration-700"
+                    loading="lazy"
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
                 )}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1c1c19]/60 via-[#1c1c19]/10 to-transparent" />

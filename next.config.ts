@@ -1,13 +1,31 @@
 import type { NextConfig } from "next";
 
+// ✅ PERFORMANCE: Bundle analyzer
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
+
 const nextConfig: NextConfig = {
   // Enable static site generation (SSG)
   // Disabled for MVP development with API integration - will be re-enabled with ISR strategy
   // output: 'export',
   
-  // Disable image optimization for static export
+  // ✅ PERFORMANCE: Enable image optimization
   images: {
-    unoptimized: true,
+    formats: ['image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
+    remotePatterns: [
+      {
+        protocol: 'http',
+        hostname: 'localhost',
+      },
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   
   // Trailing slashes for static hosting
@@ -21,4 +39,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

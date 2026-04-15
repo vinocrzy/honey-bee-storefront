@@ -55,6 +55,12 @@ export const guestCheckout = async (data: GuestCheckoutRequest): Promise<Checkou
         first_name: data.shipping_address.first_name,
         last_name: data.shipping_address.last_name,
         phone: data.customer_phone,
+        address_line1: data.shipping_address.address_line1,
+        address_line2: data.shipping_address.address_line2,
+        city: data.shipping_address.city,
+        state: data.shipping_address.state,
+        postal_code: data.shipping_address.postal_code,
+        country: data.shipping_address.country,
         note: data.notes,
       }
     );

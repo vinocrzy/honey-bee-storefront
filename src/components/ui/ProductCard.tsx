@@ -42,10 +42,12 @@ export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge,
         <div className="aspect-[4/5] overflow-hidden relative">
           <Image
             src={imageUrl}
-            alt={name}
+            alt={`${name} - Artisan handmade soap`}
             width={400}
             height={500}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           />
           {/* Quick add button on hover */}
           <button

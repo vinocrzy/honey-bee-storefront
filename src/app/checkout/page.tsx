@@ -91,7 +91,7 @@ export default function CheckoutPage() {
     if (!form.customerPhone.trim()) {
       newErrors.customerPhone = 'Phone is required';
     } else if (!validatePhoneE164(customerPhoneE164)) {
-      newErrors.customerPhone = 'Invalid Indian phone number (10 digits required, e.g. 98765 43210)';
+      newErrors.customerPhone = 'Invalid phone number. Enter 10 digits without +91 (e.g., 98765 43210)';
     }
 
     // Shipping address
@@ -107,7 +107,7 @@ export default function CheckoutPage() {
     if (!form.shippingPhone.trim()) {
       newErrors.shippingPhone = 'Phone is required';
     } else if (!validatePhoneE164(shippingPhoneE164)) {
-      newErrors.shippingPhone = 'Invalid Indian phone number (10 digits required, e.g. 98765 43210)';
+      newErrors.shippingPhone = 'Invalid phone number. Enter 10 digits without +91 (e.g., 98765 43210)';
     }
 
     setErrors(newErrors);
