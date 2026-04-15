@@ -1,33 +1,42 @@
 'use client';
 
 import { useState } from 'react';
+import { useCart } from '@/contexts/CartContext';
 
 interface AddToCartButtonProps {
   productId: number | string;
   productName: string;
   price: number;
+  quantity?: number;
 }
 
-export function AddToCartButton({ productId, productName, price }: AddToCartButtonProps) {
+export function AddToCartButton({ productId, productName, price, quantity = 1 }: AddToCartButtonProps) {
   const [added, setAdded] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const { addToCart, isLoading } = useCart();
 
   const handleAddToCart = async () => {
-    setLoading(true);
-    // TODO: wire to cart service
-    await new Promise<void>((r) => setTimeout(r, 600));
-    setAdded(true);
-    setLoading(false);
-    setTimeout(() => setAdded(false), 2500);
+    try {
+      await addToCart({
+        product_id: Number(productId),
+        quantity,
+      });
+      
+      // Show success state
+      setAdded(true);
+      setTimeout(() => setAdded(false), 2500);
+    } catch (error) {
+      console.error('Failed to add to cart:', error);
+      // You could show a toast notification here
+    }
   };
 
   return (
     <button
       onClick={handleAddToCart}
-      disabled={loading}
+      disabled={isLoading}
       className="honey-glow text-white w-full py-5 rounded-xl font-label uppercase tracking-widest text-sm font-bold shadow-lg shadow-primary/10 transition-all active:scale-95 disabled:opacity-70"
     >
-      {loading ? (
+      {isLoading ? (
         <span className="flex items-center justify-center gap-2">
           <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24" fill="none">
             <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />

@@ -1,0 +1,37 @@
+# Honey Bee Atelier - Robots.txt
+# Allow search engines to crawl public pages
+
+# Allow all bots
+User-agent: *
+Allow: /
+
+# Disallow private/account pages (no need to index these)
+Disallow: /account
+Disallow: /account/*
+Disallow: /orders
+Disallow: /orders/*
+Disallow: /login
+Disallow: /register
+Disallow: /checkout
+Disallow: /cart
+
+# Disallow search results (avoid duplicate content)
+Disallow: /search
+
+# Allow product pages and collections (critical for SEO)
+Allow: /products
+Allow: /products/*
+Allow: /collections
+Allow: /collections/*
+
+# Allow static content pages
+Allow: /our-story
+Allow: /process
+Allow: /journal
+Allow: /journal/*
+Allow: /rituals
+Allow: /ingredients
+Allow: /contact
+
+# Sitemap location
+Sitemap: https://honeybee.com/sitemap.xml

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
+import { useAuth } from '@/contexts/AuthContext';
 
 const navLinks = [
   { href: '/products', label: 'Shop' },
@@ -22,6 +23,7 @@ export function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const pathname = usePathname();
   const { itemCount } = useCart();
+  const { isAuthenticated, isLoading: authLoading } = useAuth();
 
   return (
     <header className="botanical-glass sticky top-0 z-50 w-full">
@@ -65,16 +67,19 @@ export function Header() {
             </span>
           </Link>
 
-          {/* Account */}
-          <Link
-            href="/account"
-            aria-label="Account"
-            className="hidden md:block text-[#4f4634] hover:text-[#7b5800] transition-colors"
-          >
-            <span className="material-symbols-outlined" style={{ fontVariationSettings: "'wght' 200" }}>
-              person
-            </span>
-          </Link>
+          {/* Account - conditional based on auth state */}
+          {!authLoading && (
+            <Link
+              href={isAuthenticated ? '/account' : '/login'}
+              aria-label={isAuthenticated ? 'Account' : 'Login'}
+              className="hidden md:block text-[#4f4634] hover:text-[#7b5800] transition-colors"
+              title={isAuthenticated ? 'My Account' : 'Login'}
+            >
+              <span className="material-symbols-outlined" style={{ fontVariationSettings: "'wght' 200" }}>
+                {isAuthenticated ? 'person' : 'login'}
+              </span>
+            </Link>
+          )}
 
           {/* Cart */}
           <Link
@@ -120,15 +125,17 @@ export function Header() {
                 </Link>
               </li>
             ))}
-            <li className="border-b border-[#d3c5ae]/40">
-              <Link
-                href="/account"
-                className="block py-4 label-caps text-[#4f4634] hover:text-[#7b5800] transition-colors"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Account
-              </Link>
-            </li>
+            {!authLoading && (
+              <li className="border-b border-[#d3c5ae]/40">
+                <Link
+                  href={isAuthenticated ? '/account' : '/login'}
+                  className="block py-4 label-caps text-[#4f4634] hover:text-[#7b5800] transition-colors"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {isAuthenticated ? 'ACCOUNT' : 'LOGIN'}
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
       )}
