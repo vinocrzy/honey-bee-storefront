@@ -165,10 +165,10 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 <p className="label-caps text-[#5c614d] mb-6">{product.short_description}</p>
               )}
               <div className="text-3xl font-semibold text-[#7b5800]">
-                ${product.price.toFixed(2)}
-                {product.compare_at_price && product.compare_at_price > product.price && (
+                ${Number(product.price).toFixed(2)}
+                {product.compare_at_price && Number(product.compare_at_price) > Number(product.price) && (
                   <span className="ml-3 text-xl text-[#9e9e90] line-through font-normal">
-                    ${product.compare_at_price.toFixed(2)}
+                    ${Number(product.compare_at_price).toFixed(2)}
                   </span>
                 )}
               </div>
@@ -245,7 +245,7 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
                 <div className="p-5">
                   <div className="flex justify-between items-baseline mb-1">
                     <h3 className="font-headline text-xl text-[#1c1c19]">{relatedProduct.name}</h3>
-                    <span className="font-semibold text-[#7b5800]">${relatedProduct.price.toFixed(2)}</span>
+                    <span className="font-semibold text-[#7b5800]">${Number(relatedProduct.price).toFixed(2)}</span>
                   </div>
                   {relatedProduct.short_description && (
                     <p className="label-caps text-[#5c614d] mt-2">{relatedProduct.short_description}</p>
