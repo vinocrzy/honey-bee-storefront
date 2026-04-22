@@ -33,6 +33,10 @@ export interface Product {
   images?: ProductImage[];
   primary_image?: ProductImage;
   
+  // Review aggregates (optional, returned by API)
+  avg_rating?: number | null;
+  review_count?: number;
+
   // Timestamps
   created_at: string;
   updated_at: string;

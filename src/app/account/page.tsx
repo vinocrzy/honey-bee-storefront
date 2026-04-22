@@ -9,17 +9,21 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { NursePromiseBand } from '@/components/ui/NursePromiseBand';
 import { Breadcrumb } from '@/components/ui/Breadcrumb';
 import * as CustomerService from '@/services/customer';
-import type { Order } from '@/types';
+import * as WishlistService from '@/services/wishlist';
+import { useWishlist } from '@/contexts/WishlistContext';
+import { useCart } from '@/contexts/CartContext';
+import { ProductCard } from '@/components/ui/ProductCard';
+import type { Order, Product } from '@/types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
-type AccountTab = 'details' | 'orders' | 'addresses';
+type AccountTab = 'details' | 'orders' | 'addresses' | 'wishlist';
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -275,12 +279,129 @@ function OrdersTab() {
   );
 }
 
+// ─── Wishlist tab — fetches live data ────────────────────────────────────────
+
+function WishlistTab() {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const { toggleWishlist } = useWishlist();
+  const { addToCart } = useCart();
+
+  useEffect(() => {
+    WishlistService.getWishlist(1)
+      .then((res) => setProducts(res.data))
+      .catch((err: unknown) =>
+        setError(err instanceof Error ? err.message : 'Failed to load wishlist.')
+      )
+      .finally(() => setLoading(false));
+  }, []);
+
+  const handleRemove = async (productId: number) => {
+    await toggleWishlist(productId);
+    setProducts((prev) => prev.filter((p) => p.id !== productId));
+  };
+
+  const handleAddToCart = async (productId: number) => {
+    try {
+      await addToCart({ product_id: productId, quantity: 1 });
+    } catch { /* ignore */ }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center py-20">
+        <div className="w-8 h-8 rounded-full border-2 border-[#7b5800]/20 border-t-[#7b5800] animate-spin" />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex items-start gap-3 bg-red-50 border border-red-200 rounded-xl p-5">
+        <span className="material-symbols-outlined text-red-600" style={{ fontSize: '18px' }}>error</span>
+        <p className="text-sm text-red-700">{error}</p>
+      </div>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <div className="text-center py-20 space-y-4">
+        <span
+          className="material-symbols-outlined text-[#7b5800]/30 block mx-auto"
+          style={{ fontSize: '56px', fontVariationSettings: "'wght' 100" }}
+        >
+          favorite
+        </span>
+        <h3 className="font-headline text-2xl text-[#1c1c19]">Your wishlist is empty</h3>
+        <p className="text-sm text-on-surface-variant">
+          Browse our collection and save items you love.
+        </p>
+        <Link
+          href="/products"
+          className="honey-glow inline-block text-white font-label font-bold uppercase tracking-widest text-sm px-8 py-4 rounded-xl shadow-md shadow-primary/10 hover:opacity-90 transition-opacity mt-4"
+        >
+          Shop Now
+        </Link>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-6">
+      <h2 className="font-headline text-2xl text-[#1c1c19] mb-6">My Wishlist ({products.length})</h2>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {products.map((product) => (
+          <div key={product.id} className="bg-white rounded-xl sunlight-shadow p-5 flex gap-5">
+            <Link href={`/products/${product.slug}`} className="flex-shrink-0 w-24 h-28 rounded-xl overflow-hidden">
+              <img
+                src={product.primary_image?.url || product.images?.[0]?.url || 'https://images.unsplash.com/photo-1600857544200-b2f468e9b2b1?w=200&auto=format&fit=crop'}
+                alt={product.name}
+                className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+              />
+            </Link>
+            <div className="flex-1 min-w-0">
+              <Link href={`/products/${product.slug}`}>
+                <h3 className="font-headline text-lg text-[#1c1c19] hover:text-primary transition-colors leading-tight">
+                  {product.name}
+                </h3>
+              </Link>
+              <p className="font-semibold text-primary mt-1">
+                {new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(product.price)}
+              </p>
+              <div className="flex gap-3 mt-3">
+                <button
+                  onClick={() => handleAddToCart(product.id)}
+                  className="honey-glow text-white font-label font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+                >
+                  Add to Cart
+                </button>
+                <button
+                  onClick={() => handleRemove(product.id)}
+                  className="border border-error text-error font-label font-bold uppercase tracking-widest text-[10px] px-4 py-2 rounded-lg hover:bg-error/10 transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── Main page export ─────────────────────────────────────────────────────────
 
 export default function AccountPage() {
   const { customer, isAuthenticated, isLoading: authLoading, logout } = useAuth();
   const router = useRouter();
-  const [tab, setTab] = useState<AccountTab>('details');
+  const searchParams = useSearchParams();
+  const initialTab = (['details', 'orders', 'addresses', 'wishlist'] as const).includes(
+    searchParams.get('tab') as AccountTab
+  ) ? (searchParams.get('tab') as AccountTab) : 'details';
+  const [tab, setTab] = useState<AccountTab>(initialTab);
   const [signingOut, setSigningOut] = useState(false);
 
   async function handleSignOut() {
@@ -368,6 +489,7 @@ export default function AccountPage() {
               {navItem('details', 'account_circle', 'My Profile')}
               {navItem('orders', 'receipt_long', 'Orders')}
               {navItem('addresses', 'home_pin', 'Addresses')}
+              {navItem('wishlist', 'favorite', 'Wishlist')}
 
               <div className="pt-2">
                 <button
@@ -506,6 +628,9 @@ export default function AccountPage() {
                 )}
               </div>
             )}
+
+            {/* Wishlist */}
+            {tab === 'wishlist' && <WishlistTab />}
 
           </div>
         </div>

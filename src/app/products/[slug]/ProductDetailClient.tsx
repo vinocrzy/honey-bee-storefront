@@ -8,6 +8,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
+import { WishlistButton } from '@/components/ui/WishlistButton';
 import type { Product } from '@/types';
 
 interface ProductDetailClientProps {
@@ -84,13 +85,20 @@ export function ProductDetailClient({ product, showOnlyCartButton = false }: Pro
         </div>
 
         {/* Add to Cart Button */}
-        <button
-          onClick={handleAddToCart}
-          disabled={adding || cartLoading || product.stock_quantity < 1}
-          className="honey-glow w-full text-white font-label tracking-wider rounded-xl px-8 py-4 disabled:opacity-50 transition-opacity"
-        >
-          {adding ? 'ADDING...' : product.stock_quantity < 1 ? 'OUT OF STOCK' : 'ADD TO CART'}
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={handleAddToCart}
+            disabled={adding || cartLoading || product.stock_quantity < 1}
+            className="honey-glow flex-1 text-white font-label tracking-wider rounded-xl px-8 py-4 disabled:opacity-50 transition-opacity"
+          >
+            {adding ? 'ADDING...' : product.stock_quantity < 1 ? 'OUT OF STOCK' : 'ADD TO CART'}
+          </button>
+          <WishlistButton
+            productId={product.id}
+            size="md"
+            className="w-14 h-14 rounded-xl border border-outline-variant hover:bg-surface-container transition-colors flex-shrink-0"
+          />
+        </div>
 
         {/* Success Message */}
         {successMessage && (

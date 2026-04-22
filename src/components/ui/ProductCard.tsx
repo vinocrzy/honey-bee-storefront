@@ -4,6 +4,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
+import { WishlistButton } from '@/components/ui/WishlistButton';
+import { RatingStars } from '@/components/ui/RatingStars';
 
 interface ProductCardProps {
   id: number | string;
@@ -15,9 +17,11 @@ interface ProductCardProps {
   badge?: string;
   tags?: string[];
   currency?: string;
+  avg_rating?: number | null;
+  review_count?: number;
 }
 
-export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge, tags = [], currency = 'INR' }: ProductCardProps) {
+export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge, tags = [], currency = 'INR', avg_rating, review_count }: ProductCardProps) {
   const formatted = new Intl.NumberFormat('en-IN', { style: 'currency', currency }).format(price);
   const { addToCart, isLoading } = useCart();
   const [added, setAdded] = useState(false);
@@ -38,6 +42,12 @@ export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge,
 
   return (
     <div className="group block bg-surface-container-lowest rounded-xl sunlight-shadow overflow-hidden hover:shadow-xl transition-shadow duration-300 relative">
+      {/* Wishlist button */}
+      <WishlistButton
+        productId={Number(id)}
+        size="sm"
+        className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/80 backdrop-blur-sm sunlight-shadow hover:bg-white"
+      />
       <Link href={`/products/${slug}`}>
         <div className="aspect-[4/5] overflow-hidden relative">
           <Image
@@ -75,6 +85,12 @@ export function ProductCard({ id, slug, name, price, imageUrl, fragrance, badge,
             <h3 className="font-headline text-xl text-[#1c1c19]">{name}</h3>
             <span className="font-semibold text-primary">{formatted}</span>
           </div>
+          {avg_rating != null && avg_rating > 0 && (
+            <div className="flex items-center gap-1 mt-1">
+              <RatingStars rating={avg_rating} size="sm" />
+              <span className="text-xs text-on-surface-variant">({review_count ?? 0})</span>
+            </div>
+          )}
           {fragrance && (
             <p className="label-caps text-on-surface-variant mb-3">{fragrance}</p>
           )}

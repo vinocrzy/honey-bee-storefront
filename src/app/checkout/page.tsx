@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -41,6 +41,18 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
+
+  // Read applied coupon from localStorage (set on cart page)
+  const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(null);
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('applied_coupon');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        setAppliedCouponCode(parsed.code || null);
+      }
+    } catch { /* ignore */ }
+  }, []);
   
   const [form, setForm] = useState<FormData>({
     customerName: '',
@@ -150,12 +162,16 @@ export default function CheckoutPage() {
         },
         notes: form.notes.trim() || undefined,
         cart_token: cart.token,
+        ...(appliedCouponCode ? { coupon_code: appliedCouponCode } : {}),
       };
 
       const result = await guestCheckout(checkoutData);
       
       // Clear cart after successful checkout
       await clearCart();
+      
+      // Clear applied coupon
+      localStorage.removeItem('applied_coupon');
       
       // Redirect to confirmation page
       router.push(`/orders/confirmation?order=${result.order.order_number}`);

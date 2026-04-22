@@ -11,6 +11,7 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { useAuth } from '@/contexts/AuthContext';
+import { useWishlist } from '@/contexts/WishlistContext';
 
 const navLinks = [
   { href: '/products', label: 'Shop' },
@@ -24,6 +25,7 @@ export function Header() {
   const pathname = usePathname();
   const { itemCount } = useCart();
   const { isAuthenticated, isLoading: authLoading } = useAuth();
+  const { wishlistCount } = useWishlist();
 
   return (
     <header className="botanical-glass sticky top-0 z-50 w-full">
@@ -78,6 +80,27 @@ export function Header() {
               <span className="material-symbols-outlined" aria-hidden="true" style={{ fontVariationSettings: "'wght' 200" }}>
                 {isAuthenticated ? 'person' : 'login'}
               </span>
+            </Link>
+          )}
+
+          {/* Wishlist */}
+          {!authLoading && isAuthenticated && (
+            <Link
+              href="/account?tab=wishlist"
+              aria-label="Wishlist"
+              className="hidden md:block text-[#4f4634] hover:text-[#7b5800] transition-colors relative"
+            >
+              <span className="material-symbols-outlined" aria-hidden="true" style={{ fontVariationSettings: "'wght' 200" }}>
+                favorite
+              </span>
+              {wishlistCount > 0 && (
+                <span
+                  className="absolute -top-1.5 -right-1.5 honey-glow text-white text-[10px] rounded-full h-4 w-4 flex items-center justify-center font-label"
+                  aria-hidden="true"
+                >
+                  {wishlistCount}
+                </span>
+              )}
             </Link>
           )}
 

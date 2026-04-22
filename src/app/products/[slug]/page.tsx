@@ -11,6 +11,7 @@ import Link from 'next/link';
 import { Metadata } from 'next';
 import { getProductBySlug, getProducts } from '@/services/products';
 import { ProductDetailClient } from './ProductDetailClient';
+import { ProductReviews } from './ProductReviews';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 
 interface ProductDetailPageProps {
@@ -100,6 +101,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         "@type": "AggregateRating",
         "ratingValue": "5",
         "reviewCount": "1"
+      }
+    }),
+    ...(product.avg_rating && product.review_count && product.review_count > 0 && {
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": product.avg_rating.toString(),
+        "reviewCount": product.review_count.toString(),
+        "bestRating": "5",
+        "worstRating": "1"
       }
     })
   };
@@ -256,6 +266,15 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
           </div>
         </section>
       )}
+
+      {/* Reviews Section */}
+      <section className="px-6 md:px-20 py-16 bg-surface-container">
+        <SectionLabel>Customer Reviews</SectionLabel>
+        <h2 className="font-headline text-3xl lg:text-4xl text-[#1c1c19] mb-10">
+          What Our Customers Say
+        </h2>
+        <ProductReviews slug={slug} />
+      </section>
     </main>
   );
 }

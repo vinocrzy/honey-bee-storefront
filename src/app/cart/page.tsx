@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { SectionLabel } from '@/components/ui/SectionLabel';
 import { NursePromiseBand } from '@/components/ui/NursePromiseBand';
 import { useCart } from '@/contexts/CartContext';
+import { validateCoupon, type CouponValidationResult } from '@/services/coupon';
 
 const FREE_SHIPPING_THRESHOLD = 999;
 
@@ -14,6 +15,27 @@ export default function CartPage() {
 
   // Per-item loading state — prevents rapid-click race conditions
   const [updatingItem, setUpdatingItem] = useState<number | null>(null);
+
+  // Coupon state
+  const [couponCode, setCouponCode] = useState('');
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [couponError, setCouponError] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState<{
+    code: string;
+    discount: number;
+    type: 'percentage' | 'fixed';
+    value: number;
+  } | null>(null);
+
+  // Restore coupon from localStorage on mount
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('applied_coupon');
+      if (saved) {
+        setAppliedCoupon(JSON.parse(saved));
+      }
+    } catch { /* ignore */ }
+  }, []);
 
   const updateQty = async (itemId: number, qty: number) => {
     if (qty < 1) return removeItem(itemId);
@@ -38,10 +60,43 @@ export default function CartPage() {
 
   const items = cart?.items || [];
   const subtotal = cart?.subtotal || 0;
+  const couponDiscount = appliedCoupon?.discount || 0;
   const shipping = cart?.shipping || (subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : 99);
   const tax = cart?.tax || 0;
-  const total = cart?.total || (subtotal + shipping + tax);
+  const total = (cart?.total || (subtotal + shipping + tax)) - couponDiscount;
   const toFreeShipping = Math.max(0, FREE_SHIPPING_THRESHOLD - subtotal);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setCouponLoading(true);
+    setCouponError('');
+    try {
+      const result = await validateCoupon(couponCode.trim(), subtotal);
+      if (result.valid && result.coupon) {
+        const couponData = {
+          code: result.coupon.code,
+          discount: result.discount,
+          type: result.coupon.type,
+          value: result.coupon.value,
+        };
+        setAppliedCoupon(couponData);
+        localStorage.setItem('applied_coupon', JSON.stringify(couponData));
+      } else {
+        setCouponError(result.message || 'Invalid coupon code.');
+      }
+    } catch (err) {
+      setCouponError(err instanceof Error ? err.message : 'Failed to validate coupon.');
+    } finally {
+      setCouponLoading(false);
+    }
+  };
+
+  const handleRemoveCoupon = () => {
+    setAppliedCoupon(null);
+    setCouponCode('');
+    setCouponError('');
+    localStorage.removeItem('applied_coupon');
+  };
 
   const fmt = (n: number) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(n);
 
@@ -207,30 +262,54 @@ export default function CartPage() {
             <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-5 sticky top-32">
               <h2 className="font-headline text-2xl text-[#1c1c19]">Order Summary</h2>
 
-              {/* Promo Code - Coming Soon */}
-              {/* <div className="space-y-2">
-                <label className="label-caps text-on-surface-variant">Promo Code</label>
-                <div className="flex gap-2">
+              {/* Coupon Code */}
+              <div className="space-y-2">
+                <label className="label-caps text-on-surface-variant block">Promo Code</label>
+                <div className="flex gap-3">
                   <input
                     type="text"
-                    placeholder="Coming soon..."
-                    disabled
-                    className="flex-1 bg-surface-container border border-outline-variant rounded-xl px-4 py-2.5 text-sm text-on-surface-variant/50 cursor-not-allowed"
+                    value={couponCode}
+                    onChange={(e) => setCouponCode(e.target.value.toUpperCase())}
+                    placeholder="Enter code"
+                    disabled={!!appliedCoupon}
+                    className="flex-1 bg-surface-container-lowest border border-outline-variant rounded-xl px-4 py-3 text-sm text-[#1c1c19] focus:outline-none focus:border-primary transition-colors placeholder:text-on-surface-variant/50 disabled:opacity-50"
                   />
-                  <button
-                    disabled
-                    className="px-4 py-2.5 border border-outline-variant text-on-surface-variant/50 font-label text-xs uppercase tracking-widest rounded-xl cursor-not-allowed"
-                  >
-                    Apply
-                  </button>
+                  {!appliedCoupon ? (
+                    <button
+                      onClick={handleApplyCoupon}
+                      disabled={!couponCode.trim() || couponLoading}
+                      className="honey-glow text-white font-label font-bold uppercase tracking-widest text-xs px-6 py-3 rounded-xl hover:opacity-90 transition-opacity disabled:opacity-50"
+                    >
+                      {couponLoading ? 'Checking...' : 'Apply'}
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleRemoveCoupon}
+                      className="border border-error text-error font-label font-bold uppercase tracking-widest text-xs px-6 py-3 rounded-xl hover:bg-error/10 transition-colors"
+                    >
+                      Remove
+                    </button>
+                  )}
                 </div>
-              </div> */}
+                {couponError && <p className="text-error text-xs mt-1">{couponError}</p>}
+                {appliedCoupon && (
+                  <p className="text-green-700 text-xs mt-1 flex items-center gap-1">
+                    <span className="material-symbols-outlined text-sm" style={{ fontVariationSettings: "'wght' 300" }}>check_circle</span>
+                    Coupon &ldquo;{appliedCoupon.code}&rdquo; applied — {appliedCoupon.type === 'percentage' ? `${appliedCoupon.value}% off` : `${fmt(appliedCoupon.value)} off`}
+                  </p>
+                )}
+              </div>
 
               {/* Totals */}
               <div className="space-y-3 pt-3 border-t border-outline-variant text-sm">
                 <div className="flex justify-between text-on-surface-variant">
                   <span>Subtotal</span><span>{fmt(subtotal)}</span>
                 </div>
+                {couponDiscount > 0 && (
+                  <div className="flex justify-between text-green-700">
+                    <span>Discount</span><span>-{fmt(couponDiscount)}</span>
+                  </div>
+                )}
                 {tax > 0 && (
                   <div className="flex justify-between text-on-surface-variant">
                     <span>Tax</span><span>{fmt(tax)}</span>

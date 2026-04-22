@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CartProvider } from "@/contexts/CartContext";
 import { AuthProvider } from "@/contexts/AuthContext";
+import { WishlistProvider } from "@/contexts/WishlistContext";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { defaultTheme } from "@/config/theme.config";
@@ -75,6 +76,7 @@ export default function RootLayout({
           theme: defaultTheme,
         }}>
           <AuthProvider>
+            <WishlistProvider>
             <CartProvider>
               <Header />
               <main id="main-content" className="flex-1" tabIndex={-1}>
@@ -82,6 +84,7 @@ export default function RootLayout({
               </main>
               <Footer />
             </CartProvider>
+            </WishlistProvider>
           </AuthProvider>
         </ThemeProvider>
       </body>
