@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { SectionLabel } from '@/components/ui/SectionLabel';
@@ -12,20 +12,27 @@ const FREE_SHIPPING_THRESHOLD = 999;
 export default function CartPage() {
   const { cart, isLoading, error, updateQuantity, removeFromCart } = useCart();
 
+  // Per-item loading state — prevents rapid-click race conditions
+  const [updatingItem, setUpdatingItem] = useState<number | null>(null);
+
   const updateQty = async (itemId: number, qty: number) => {
     if (qty < 1) return removeItem(itemId);
+    if (updatingItem === itemId) return; // Block concurrent calls on same item
+    setUpdatingItem(itemId);
     try {
       await updateQuantity(itemId, qty);
-    } catch (err) {
-      console.error('Failed to update quantity:', err);
+    } finally {
+      setUpdatingItem(null);
     }
   };
 
   const removeItem = async (itemId: number) => {
+    if (updatingItem === itemId) return;
+    setUpdatingItem(itemId);
     try {
       await removeFromCart(itemId);
-    } catch (err) {
-      console.error('Failed to remove item:', err);
+    } finally {
+      setUpdatingItem(null);
     }
   };
 
@@ -154,7 +161,7 @@ export default function CartPage() {
                 <div className="flex flex-col items-end justify-between">
                   <button
                     onClick={() => removeItem(item.id)}
-                    disabled={isLoading}
+                    disabled={updatingItem === item.id || isLoading}
                     className="text-on-surface-variant hover:text-error transition-colors disabled:opacity-50"
                     aria-label="Remove item"
                   >
@@ -164,7 +171,7 @@ export default function CartPage() {
                   <div className="flex items-center border border-outline-variant rounded-xl overflow-hidden">
                     <button
                       onClick={() => updateQty(item.id, item.quantity - 1)}
-                      disabled={isLoading}
+                      disabled={updatingItem === item.id || isLoading}
                       className="px-3 py-2 text-primary hover:bg-surface-container transition-colors disabled:opacity-50"
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'wght' 300" }}>remove</span>
@@ -174,7 +181,7 @@ export default function CartPage() {
                     </span>
                     <button
                       onClick={() => updateQty(item.id, item.quantity + 1)}
-                      disabled={isLoading}
+                      disabled={updatingItem === item.id || isLoading}
                       className="px-3 py-2 text-primary hover:bg-surface-container transition-colors disabled:opacity-50"
                     >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px', fontVariationSettings: "'wght' 300" }}>add</span>

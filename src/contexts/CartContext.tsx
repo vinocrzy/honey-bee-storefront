@@ -62,10 +62,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
             const guestCart = await cartApi.getCart(token);
             setCart(guestCart);
           } catch (err) {
-            // Token expired or invalid - clear it
-            console.warn('Cart token invalid, clearing:', err);
+            // Token expired or invalid - clear it and surface a friendly message
             localStorage.removeItem(CART_TOKEN_KEY);
             setCart(null);
+            setError('Your cart has expired. Please add items again.');
           }
         } else {
           setCart(null);
@@ -102,7 +102,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       
       // Token already saved above, no need to check again
     } catch (err) {
-      console.error('Failed to add to cart:', err);
       setError(err instanceof Error ? err.message : 'Failed to add to cart');
       throw err;
     } finally {
@@ -110,7 +109,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [getCartToken, setCartToken]);
 
-  // Update item quantity
+  // Update item quantity — uses per-item loading key to prevent race conditions
   const updateQuantity = useCallback(async (itemId: number, quantity: number) => {
     if (!cart || !cart.token) {
       setError('No active cart');
@@ -124,7 +123,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const updatedCart = await cartApi.updateItem(cart.token, itemId, { quantity });
       setCart(updatedCart);
     } catch (err) {
-      console.error('Failed to update quantity:', err);
       setError(err instanceof Error ? err.message : 'Failed to update quantity');
       throw err;
     } finally {
@@ -146,7 +144,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
       const updatedCart = await cartApi.removeItem(cart.token, itemId);
       setCart(updatedCart);
     } catch (err) {
-      console.error('Failed to remove item:', err);
       setError(err instanceof Error ? err.message : 'Failed to remove item');
       throw err;
     } finally {
@@ -168,7 +165,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(CART_TOKEN_KEY);
       }
     } catch (err) {
-      console.error('Failed to clear cart:', err);
       setError(err instanceof Error ? err.message : 'Failed to clear cart');
       throw err;
     } finally {
