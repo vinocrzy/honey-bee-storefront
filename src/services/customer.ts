@@ -10,9 +10,18 @@ export interface RegisterRequest {
   first_name: string;
   last_name: string;
   phone: string; // E.164 format: +12025551234
-  email?: string;
+  email?: string; // Optional — phone is primary identifier
   password: string;
-  password_confirmation: string;
+  password_confirmation?: string; // Unused by backend, kept for UI validation
+}
+
+/**
+ * Raw backend auth response shape (register + login)
+ * Backend returns { data: Customer, token: string } — NOT nested under data.token
+ */
+interface AuthApiResponse {
+  data: Customer;
+  token: string;
 }
 
 export interface LoginRequest {
@@ -31,17 +40,20 @@ export interface AuthResponse {
  */
 export const register = async (data: RegisterRequest): Promise<AuthResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>(
+    const response = await apiClient.post<AuthApiResponse>(
       '/public/customer/register',
       data
     );
-    
-    // Store auth token
-    if (typeof window !== 'undefined' && response.data.data.token) {
-      localStorage.setItem('customer_token', response.data.data.token);
+
+    // Backend returns { data: {...customer...}, token: "..." }
+    const token = response.data.token;
+    const customer = response.data.data;
+
+    if (typeof window !== 'undefined' && token) {
+      localStorage.setItem('customer_token', token);
     }
-    
-    return response.data.data;
+
+    return { token, customer };
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }
@@ -53,17 +65,20 @@ export const register = async (data: RegisterRequest): Promise<AuthResponse> => 
  */
 export const login = async (data: LoginRequest): Promise<AuthResponse> => {
   try {
-    const response = await apiClient.post<ApiResponse<AuthResponse>>(
+    const response = await apiClient.post<AuthApiResponse>(
       '/public/customer/login',
       data
     );
-    
-    // Store auth token
-    if (typeof window !== 'undefined' && response.data.data.token) {
-      localStorage.setItem('customer_token', response.data.data.token);
+
+    // Backend returns { data: {...customer...}, token: "..." }
+    const token = response.data.token;
+    const customer = response.data.data;
+
+    if (typeof window !== 'undefined' && token) {
+      localStorage.setItem('customer_token', token);
     }
-    
-    return response.data.data;
+
+    return { token, customer };
   } catch (error) {
     throw new Error(getErrorMessage(error));
   }

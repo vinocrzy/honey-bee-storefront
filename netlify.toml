@@ -5,11 +5,10 @@
   command = "npm run build"
   publish = ".next"
 
-# Redirects for SPA routing
-[[redirects]]
-  from = "/*"
-  to = "/index.html"
-  status = 200
+# ✅ Next.js SSR/dynamic routes — handled by @netlify/plugin-nextjs
+# DO NOT use SPA-style "/* → /index.html" redirect here; it breaks dynamic routes
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # ✅ PERFORMANCE: Cache static assets for 1 year (immutable)
 [[headers]]
