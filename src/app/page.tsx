@@ -2,6 +2,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getFeaturedProducts, getCategories } from '@/services/products';
 import type { Product, Category } from '@/types';
+import { NewsletterSignup } from '@/components/newsletter/NewsletterSignup';
 
 /* ─────────────────────────────────────────────────────────────────────────────
  * Honey Bee — Homepage
@@ -259,6 +260,9 @@ export default async function HomePage() {
           Experience the Alchemy
         </Link>
       </section>
+
+      {/* ── 7. NEWSLETTER ─────────────────────────────────────────────────── */}
+      <NewsletterSignup />
     </>
   );
 }

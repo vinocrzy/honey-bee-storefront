@@ -13,6 +13,7 @@ import { getProductBySlug, getProducts } from '@/services/products';
 import { ProductDetailClient } from './ProductDetailClient';
 import { ProductReviews } from './ProductReviews';
 import { SectionLabel } from '@/components/ui/SectionLabel';
+import { ProductRecommendations } from '@/components/recommendations/ProductRecommendations';
 
 interface ProductDetailPageProps {
   params: Promise<{ slug: string }>;
@@ -275,6 +276,13 @@ export default async function ProductDetailPage({ params }: ProductDetailPagePro
         </h2>
         <ProductReviews slug={slug} />
       </section>
+
+      {/* Phase 9C: AI Recommendations */}
+      <ProductRecommendations
+        productId={product.id}
+        title="You May Also Love"
+        subtitle="Handpicked from the same collection"
+      />
     </main>
   );
 }
