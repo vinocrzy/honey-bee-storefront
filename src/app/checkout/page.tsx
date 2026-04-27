@@ -8,6 +8,8 @@ import { SectionLabel } from '@/components/ui/SectionLabel';
 import { useCart } from '@/contexts/CartContext';
 import { guestCheckout, type GuestCheckoutRequest } from '@/services/checkout';
 import { formatPhoneToE164, validatePhoneE164, formatPhoneInput } from '@/lib/phoneUtils';
+import { PaymentStep } from './PaymentStep';
+import { getPaymentConfig, type PaymentData, type PaymentGateway } from '@/services/payment';
 
 interface FormData {
   customerName: string;
@@ -41,6 +43,11 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [errors, setErrors] = useState<FormErrors>({});
   const [generalError, setGeneralError] = useState<string | null>(null);
+  const [paymentGateway, setPaymentGateway] = useState<PaymentGateway>('manual');
+  const [showPaymentStep, setShowPaymentStep] = useState(false);
+  const [paymentData, setPaymentData] = useState<PaymentData>(null);
+  const [createdOrderNumber, setCreatedOrderNumber] = useState<string>('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<string>('card');
 
   // Read applied coupon from localStorage (set on cart page)
   const [appliedCouponCode, setAppliedCouponCode] = useState<string | null>(null);
@@ -52,6 +59,13 @@ export default function CheckoutPage() {
         setAppliedCouponCode(parsed.code || null);
       }
     } catch { /* ignore */ }
+  }, []);
+
+  // Fetch payment gateway config on mount
+  useEffect(() => {
+    getPaymentConfig()
+      .then((config) => setPaymentGateway(config.payment_gateway))
+      .catch(() => setPaymentGateway('manual'));
   }, []);
   
   const [form, setForm] = useState<FormData>({
@@ -162,18 +176,24 @@ export default function CheckoutPage() {
         },
         notes: form.notes.trim() || undefined,
         cart_token: cart.token,
+        payment_method: paymentGateway !== 'manual' ? selectedPaymentMethod : 'pending',
         ...(appliedCouponCode ? { coupon_code: appliedCouponCode } : {}),
       };
 
       const result = await guestCheckout(checkoutData);
+
+      // Check if payment is needed
+      if (result.payment && result.payment.gateway !== 'manual') {
+        setCreatedOrderNumber(result.order.order_number);
+        setPaymentData(result.payment as PaymentData);
+        setShowPaymentStep(true);
+        setSubmitting(false);
+        return; // Don't redirect yet — PaymentStep handles it
+      }
       
-      // Clear cart after successful checkout
+      // No payment needed — redirect immediately
       await clearCart();
-      
-      // Clear applied coupon
       localStorage.removeItem('applied_coupon');
-      
-      // Redirect to confirmation page
       router.push(`/orders/confirmation?order=${result.order.order_number}`);
     } catch (err) {
       console.error('Checkout error:', err);
@@ -426,6 +446,51 @@ export default function CheckoutPage() {
             />
           </div>
 
+          {/* Payment Method Selection */}
+          {paymentGateway !== 'manual' && (
+            <div className="bg-surface-container-lowest rounded-xl sunlight-shadow p-7 space-y-6">
+              <h2 className="font-headline text-2xl text-[#1c1c19]">Payment Method</h2>
+              <div className="space-y-3">
+                <label className="flex items-center gap-4 p-4 border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="card"
+                    checked={selectedPaymentMethod === 'card'}
+                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                    className="w-4 h-4 accent-[#7b5800]"
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm text-[#1c1c19]">
+                      {paymentGateway === 'razorpay' ? 'Pay with UPI / Card / Netbanking' : 'Pay with Card'}
+                    </p>
+                    <p className="text-xs text-on-surface-variant">Secure payment powered by {paymentGateway === 'razorpay' ? 'Razorpay' : 'Stripe'}</p>
+                  </div>
+                  <span className="material-symbols-outlined text-primary" style={{ fontSize: '24px', fontVariationSettings: "'wght' 200" }}>
+                    {paymentGateway === 'razorpay' ? 'account_balance' : 'credit_card'}
+                  </span>
+                </label>
+                <label className="flex items-center gap-4 p-4 border border-outline-variant rounded-xl cursor-pointer hover:border-primary transition-colors has-[:checked]:border-primary has-[:checked]:bg-primary/5">
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="pending"
+                    checked={selectedPaymentMethod === 'pending'}
+                    onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+                    className="w-4 h-4 accent-[#7b5800]"
+                  />
+                  <div className="flex-1">
+                    <p className="font-semibold text-sm text-[#1c1c19]">Pay Later / Cash on Delivery</p>
+                    <p className="text-xs text-on-surface-variant">Complete payment after delivery</p>
+                  </div>
+                  <span className="material-symbols-outlined text-on-surface-variant" style={{ fontSize: '24px', fontVariationSettings: "'wght' 200" }}>
+                    payments
+                  </span>
+                </label>
+              </div>
+            </div>
+          )}
+
           {/* Submit Button */}
           <button
             type="submit"
@@ -441,7 +506,9 @@ export default function CheckoutPage() {
                 Placing Your Order...
               </span>
             ) : (
-              `Place Order — ${fmt(total)}`
+              selectedPaymentMethod === 'card' && paymentGateway !== 'manual'
+                ? `Pay ${fmt(total)}`
+                : `Place Order — ${fmt(total)}`
             )}
           </button>
         </div>
@@ -501,6 +568,27 @@ export default function CheckoutPage() {
           </div>
         </div>
       </form>
+
+      {/* Payment Modal */}
+      {showPaymentStep && paymentData && (
+        <PaymentStep
+          paymentData={paymentData}
+          orderNumber={createdOrderNumber}
+          customerName={form.customerName}
+          customerEmail={form.customerEmail}
+          customerPhone={formatPhoneToE164(form.customerPhone)}
+          total={total}
+          onPaymentComplete={() => {
+            clearCart();
+            localStorage.removeItem('applied_coupon');
+            router.push(`/orders/confirmation?order=${createdOrderNumber}`);
+          }}
+          onPaymentFailed={(error) => {
+            console.error('Payment failed:', error);
+            // Don't redirect — PaymentStep shows retry/pay later
+          }}
+        />
+      )}
     </main>
   );
 }
